@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>つぎて 適性診断 — 先祖の血が教えてくれる</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600;700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FDFAF4;
+  --ink: #1A1208;
+  --soil: #3D2B1F;
+  --clay: #9B6B47;
+  --straw: #C8952A;
+  --gold: #E8B84B;
+  --cream: #F5EDD8;
+  --sage: #5C7A52;
+  --sky: #3A7A9A;
+  --stone: #7A7068;
+  --border: #DDD5C5;
+  --white: #FFFFFF;
+
+  /* 五行 */
+  --ki: #4A8A3A;   /* 木 green */
+  --hi: #C84A2A;   /* 火 red */
+  --tsuchi: #C89430; /* 土 gold */
+  --kin: #A0A0A0;  /* 金 silver */
+  --mizu: #2A6A9A; /* 水 blue */
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* HEADER */
+header {
+  background: var(--soil);
+  padding: 0 2rem;
+  height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.logo {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 1.3rem; color: var(--gold);
+  display: flex; align-items: center; gap: 0.75rem;
+}
+.back-btn {
+  color: rgba(255,255,255,0.6); font-size: 0.85rem;
+  text-decoration: none; transition: color 0.2s;
+}
+.back-btn:hover { color: white; }
+
+/* HERO */
+.shindan-hero {
+  background: linear-gradient(160deg, #1A0F08 0%, #2A1A38 40%, #0A2A1A 100%);
+  padding: 4rem 2rem 3rem;
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+.stars {
+  position: absolute; top:0; left:0; right:0; bottom:0;
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, rgba(255,255,200,0.8) 0%, transparent 100%),
+    radial-gradient(1px 1px at 40% 60%, rgba(255,255,200,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 60% 20%, rgba(255,255,200,0.7) 0%, transparent 100%),
+    radial-gradient(1px 1px at 80% 50%, rgba(255,255,200,0.5) 0%, transparent 100%),
+    radial-gradient(2px 2px at 15% 70%, rgba(255,230,150,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 70% 80%, rgba(255,255,200,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 35% 15%, rgba(255,255,200,0.7) 0%, transparent 100%),
+    radial-gradient(2px 2px at 55% 45%, rgba(255,230,150,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 90% 25%, rgba(255,255,200,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 10% 45%, rgba(255,255,200,0.5) 0%, transparent 100%);
+  pointer-events: none;
+}
+.moon {
+  font-size: 4rem; margin-bottom: 1rem;
+  animation: float 4s ease-in-out infinite;
+}
+@keyframes float {
+  0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)}
+}
+.shindan-hero h1 {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(1.6rem, 4vw, 2.5rem);
+  font-weight: 700; color: var(--gold);
+  margin-bottom: 0.75rem; line-height: 1.4;
+  position: relative;
+}
+.shindan-hero p {
+  font-size: 1rem; color: rgba(255,255,255,0.65);
+  max-width: 520px; margin: 0 auto 1.5rem;
+  line-height: 1.8;
+}
+.hero-tags {
+  display: flex; gap: 0.6rem; justify-content: center;
+  flex-wrap: wrap;
+}
+.hero-tag {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.75);
+  font-size: 0.82rem; padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+}
+
+/* FORM WRAPPER */
+.form-wrap {
+  max-width: 680px; margin: 0 auto;
+  padding: 3rem 2rem 5rem;
+}
+
+/* STEP INDICATOR */
+.steps-bar {
+  display: flex; align-items: center;
+  justify-content: center; gap: 0;
+  margin-bottom: 3rem;
+}
+.step-item {
+  display: flex; align-items: center; gap: 0;
+}
+.step-circle {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem; font-weight: 700;
+  color: var(--stone); background: white;
+  transition: all 0.3s;
+}
+.step-circle.active {
+  background: var(--straw); border-color: var(--straw);
+  color: white;
+}
+.step-circle.done {
+  background: var(--sage); border-color: var(--sage);
+  color: white;
+}
+.step-label {
+  font-size: 0.72rem; color: var(--stone);
+  margin: 0.4rem 0 0; text-align: center;
+}
+.step-line {
+  width: 60px; height: 2px;
+  background: var(--border); margin: 0 0.25rem;
+  margin-bottom: 1.2rem;
+}
+.step-line.done { background: var(--sage); }
+
+/* SECTION CARD */
+.form-section {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  display: none;
+}
+.form-section.active { display: block; }
+.form-section-title {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 1.25rem; font-weight: 700;
+  color: var(--soil); margin-bottom: 0.5rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.form-section-desc {
+  font-size: 0.88rem; color: var(--stone);
+  margin-bottom: 1.5rem; line-height: 1.7;
+  border-left: 3px solid var(--straw);
+  padding-left: 0.75rem;
+}
+
+/* INPUTS */
+.form-group { margin-bottom: 1.25rem; }
+label {
+  display: block; font-size: 0.88rem;
+  color: var(--soil); font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+label .sub { font-weight:300; color:var(--stone); font-size:0.8rem; margin-left:0.4rem; }
+input[type=text], select, textarea {
+  width:100%; padding:0.75rem 1rem;
+  border: 2px solid var(--border); border-radius: 8px;
+  font-family:'Noto Sans JP',sans-serif; font-size:1rem;
+  color:var(--ink); background:white;
+  transition: border-color 0.2s;
+}
+input:focus, select:focus, textarea:focus {
+  outline:none; border-color:var(--straw);
+  box-shadow: 0 0 0 3px rgba(200,149,42,0.1);
+}
+textarea { resize:vertical; min-height:80px; }
+.select-wrap { position:relative; }
+.select-wrap::after {
+  content:'▾'; position:absolute; right:1rem; top:50%;
+  transform:translateY(-50%); color:var(--stone); pointer-events:none;
+}
+select { appearance:none; }
+
+/* ANCESTORS ROW */
+.ancestor-row {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0.75rem; margin-bottom: 0.75rem;
+}
+.ancestor-item {
+  background: var(--cream); border-radius:8px;
+  padding: 0.75rem;
+}
+.ancestor-label {
+  font-size:0.75rem; color:var(--stone); font-weight:700;
+  margin-bottom: 0.4rem;
+}
+
+/* PERSONALITY GRID */
+.personality-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+.personality-card {
+  border: 2px solid var(--border);
+  border-radius: 10px; padding: 1rem;
+  cursor: pointer; transition: all 0.2s;
+  background: white;
+}
+.personality-card:hover {
+  border-color: var(--straw);
+  background: #FFF9EE;
+}
+.personality-card.selected {
+  border-color: var(--straw);
+  background: #FFF4DD;
+  box-shadow: 0 2px 12px rgba(200,149,42,0.15);
+}
+.personality-emoji { font-size: 1.8rem; margin-bottom: 0.4rem; }
+.personality-name { font-size:0.95rem; font-weight:700; color:var(--soil); }
+.personality-desc { font-size:0.75rem; color:var(--stone); margin-top:0.2rem; line-height:1.5; }
+
+/* NATURE GRID */
+.nature-grid {
+  display: grid; grid-template-columns: repeat(5,1fr);
+  gap: 0.5rem;
+}
+.nature-card {
+  border: 2px solid var(--border); border-radius:10px;
+  padding: 0.75rem 0.5rem; text-align:center;
+  cursor:pointer; transition: all 0.2s;
+  background:white;
+}
+.nature-card:hover { transform:translateY(-2px); }
+.nature-card.selected { transform:translateY(-3px); box-shadow:0 6px 20px rgba(0,0,0,0.1); }
+.nature-emoji { font-size:2rem; }
+.nature-name { font-size:0.9rem; font-weight:700; margin-top:0.3rem; }
+.nature-desc { font-size:0.65rem; color:var(--stone); margin-top:0.2rem; line-height:1.4; }
+
+.nature-card[data-go='木'].selected { border-color:var(--ki); background:#EAF4E8; }
+.nature-card[data-go='火'].selected { border-color:var(--hi); background:#FAE8E4; }
+.nature-card[data-go='土'].selected { border-color:var(--tsuchi); background:#FAF0DC; }
+.nature-card[data-go='金'].selected { border-color:var(--kin); background:#F0F0F0; }
+.nature-card[data-go='水'].selected { border-color:var(--mizu); background:#E4EEF8; }
+
+/* NAV BTNS */
+.nav-btns {
+  display: flex; gap: 1rem; margin-top: 2rem;
+}
+.btn-next {
+  flex:1; background:var(--soil); color:var(--gold);
+  border:none; padding:1rem;
+  font-size:1.05rem; font-weight:700;
+  border-radius:8px; cursor:pointer;
+  font-family:'Noto Serif JP',sans-serif;
+  letter-spacing:0.08em;
+  transition:all 0.2s;
+}
+.btn-next:hover { background:var(--clay); transform:translateY(-1px); }
+.btn-back {
+  background:white; color:var(--soil);
+  border:2px solid var(--border);
+  padding:1rem 1.5rem; font-size:1rem;
+  border-radius:8px; cursor:pointer;
+  font-family:'Noto Sans JP',sans-serif;
+  transition:all 0.2s;
+}
+.btn-back:hover { border-color:var(--soil); }
+
+/* ======= RESULT ======= */
+.result-wrap {
+  max-width: 720px; margin: 0 auto;
+  padding: 3rem 2rem 5rem;
+  display: none;
+}
+.result-wrap.show { display: block; }
+
+.result-hero {
+  background: linear-gradient(160deg, #1A0F08, #2A1A38, #0A2A1A);
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative; overflow: hidden;
+}
+.result-hero::before {
+  content: '';
+  position: absolute; top:0; left:0; right:0; bottom:0;
+  background-image:
+    radial-gradient(1px 1px at 15% 25%, rgba(255,255,200,0.7) 0%, transparent 100%),
+    radial-gradient(2px 2px at 75% 55%, rgba(255,230,150,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 45% 75%, rgba(255,255,200,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 85% 20%, rgba(255,255,200,0.5) 0%, transparent 100%);
+}
+.result-name {
+  font-family:'Noto Serif JP',serif;
+  font-size:0.85rem; color:rgba(255,255,255,0.5);
+  letter-spacing:0.15em; margin-bottom:0.5rem;
+  position:relative;
+}
+.result-type-emoji { font-size:4.5rem; margin:0.75rem 0; position:relative; }
+.result-type-name {
+  font-family:'Noto Serif JP',serif;
+  font-size:1.8rem; font-weight:900;
+  color:var(--gold); position:relative;
+  margin-bottom:0.5rem;
+}
+.result-type-sub {
+  font-size:0.95rem; color:rgba(255,255,255,0.65);
+  position:relative; line-height:1.7;
+}
+
+/* ATTRIBUTE CARDS */
+.attr-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1.25rem; margin-bottom: 2rem;
+}
+.attr-card {
+  background: white; border-radius:12px;
+  border: 1px solid var(--border);
+  padding: 1.5rem;
+  box-shadow: 0 2px 12px rgba(61,43,31,0.06);
+}
+.attr-card-header {
+  display:flex; align-items:center; gap:0.5rem;
+  margin-bottom:0.75rem;
+}
+.attr-badge {
+  font-size:0.72rem; font-weight:700;
+  padding:0.2rem 0.6rem; border-radius:4px;
+  letter-spacing:0.05em;
+}
+.attr-title {
+  font-family:'Noto Serif JP',serif;
+  font-size:1.1rem; font-weight:700; color:var(--soil);
+}
+.attr-emoji { font-size:1.5rem; }
+.attr-desc {
+  font-size:0.88rem; color:var(--stone);
+  line-height:1.75;
+}
+.attr-keyword {
+  display:inline-block;
+  background:var(--cream); color:var(--clay);
+  font-size:0.75rem; font-weight:700;
+  padding:0.2rem 0.5rem; border-radius:4px;
+  margin:0.2rem 0.2rem 0 0;
+}
+
+/* JOBS */
+.jobs-card {
+  background: white; border-radius:12px;
+  border: 2px solid var(--straw);
+  padding: 2rem; margin-bottom: 2rem;
+}
+.jobs-title {
+  font-family:'Noto Serif JP',serif;
+  font-size:1.3rem; font-weight:700;
+  color:var(--soil); margin-bottom:1.25rem;
+  display:flex; align-items:center; gap:0.5rem;
+}
+.job-items { display:flex; flex-direction:column; gap:0.75rem; }
+.job-item {
+  display:flex; align-items:center; gap:1rem;
+  background:var(--cream); border-radius:8px;
+  padding:0.9rem 1rem;
+  border: 1px solid var(--border);
+}
+.job-rank {
+  font-family:'Noto Serif JP',serif;
+  font-size:0.75rem; color:var(--straw);
+  font-weight:700; min-width:30px;
+}
+.job-emoji { font-size:1.5rem; }
+.job-name { font-weight:700; font-size:1rem; color:var(--soil); }
+.job-reason { font-size:0.8rem; color:var(--stone); margin-top:0.15rem; }
+
+/* ANCESTOR MSG */
+.ancestor-msg {
+  background: linear-gradient(135deg, var(--cream), #EDE0C8);
+  border-radius:12px; padding:2rem;
+  border-left:5px solid var(--straw);
+  margin-bottom:2rem;
+}
+.ancestor-msg-title {
+  font-family:'Noto Serif JP',serif;
+  font-size:1rem; font-weight:700;
+  color:var(--soil); margin-bottom:0.75rem;
+}
+.ancestor-msg p {
+  font-size:0.92rem; color:var(--ink);
+  line-height:1.85; font-style:italic;
+}
+
+/* CTA */
+.result-cta {
+  display:flex; flex-direction:column; gap:1rem;
+}
+.btn-match {
+  background:var(--soil); color:var(--gold);
+  border:none; padding:1.2rem;
+  font-size:1.1rem; font-weight:700;
+  border-radius:8px; cursor:pointer;
+  font-family:'Noto Serif JP',sans-serif;
+  letter-spacing:0.08em; text-align:center;
+  transition:all 0.2s;
+}
+.btn-match:hover { background:var(--clay); transform:translateY(-2px); }
+.btn-retry {
+  background:white; color:var(--soil);
+  border:2px solid var(--soil);
+  padding:1rem; font-size:1rem; font-weight:700;
+  border-radius:8px; cursor:pointer;
+  font-family:'Noto Sans JP',sans-serif;
+  transition:all 0.2s;
+}
+.btn-retry:hover { background:var(--cream); }
+
+.loading-overlay {
+  display:none; position:fixed;
+  top:0;left:0;right:0;bottom:0;
+  background:rgba(250,246,244,0.95);
+  z-index:999; align-items:center; justify-content:center;
+  flex-direction:column; gap:1.5rem;
+}
+.loading-overlay.show { display:flex; }
+.loading-moon { font-size:4rem; animation:float 2s ease-in-out infinite; }
+.loading-text {
+  font-family:'Noto Serif JP',serif;
+  font-size:1.2rem; color:var(--soil);
+  text-align:center; line-height:1.7;
+}
+.loading-dots::after {
+  content:'...';
+  animation: dots 1.5s steps(4,end) infinite;
+}
+@keyframes dots {
+  0%{content:''}25%{content:'.'}50%{content:'..'}75%,100%{content:'...'}
+}
+
+@media(max-width:600px){
+  .attr-grid { grid-template-columns:1fr; }
+  .personality-grid { grid-template-columns:1fr; }
+  .nature-grid { grid-template-columns:repeat(3,1fr); }
+  .ancestor-row { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🌕 つぎて 適性診断</div>
+  <a href="tsugite-main.html" class="back-btn">← 募集一覧に戻る</a>
+</header>
+
+<!-- HERO -->
+<div class="shindan-hero">
+  <div class="stars"></div>
+  <div class="moon">🌕</div>
+  <h1>先祖の血が、<br>あなたの仕事を教えてくれる</h1>
+  <p>氏名・先祖の職業・性格から<br>縄文/弥生の素質・五行・干支・陰陽を診断。<br>向いている仕事と環境が見つかります。</p>
+  <div class="hero-tags">
+    <span class="hero-tag">🌿 縄文・弥生診断</span>
+    <span class="hero-tag">☯ 五行（木火土金水）</span>
+    <span class="hero-tag">🐉 十二支</span>
+    <span class="hero-tag">🌗 陰陽・方位</span>
+  </div>
+</div>
+
+<!-- FORM -->
+<div class="form-wrap" id="form-wrap">
+
+  <!-- STEP BAR -->
+  <div class="steps-bar">
+    <div class="step-item">
+      <div style="display:flex;flex-direction:column;align-items:center;">
+        <div class="step-circle active" id="sc1">1</div>
+        <div class="step-label">基本情報</div>
+      </div>
+    </div>
+    <div class="step-line" id="sl1"></div>
+    <div class="step-item">
+      <div style="display:flex;flex-direction:column;align-items:center;">
+        <div class="step-circle" id="sc2">2</div>
+        <div class="step-label">先祖の職業</div>
+      </div>
+    </div>
+    <div class="step-line" id="sl2"></div>
+    <div class="step-item">
+      <div style="display:flex;flex-direction:column;align-items:center;">
+        <div class="step-circle" id="sc3">3</div>
+        <div class="step-label">性格・好み</div>
+      </div>
+    </div>
+    <div class="step-line" id="sl3"></div>
+    <div class="step-item">
+      <div style="display:flex;flex-direction:column;align-items:center;">
+        <div class="step-circle" id="sc4">4</div>
+        <div class="step-label">自然との関係</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="form-section active" id="step1">
+    <div class="form-section-title">👤 あなたの基本情報</div>
+    <div class="form-section-desc">氏名から先祖の職業的傾向を読み解きます。苗字には、先祖が何をしていたかのヒントが隠れています。</div>
+    <div class="form-group">
+      <label>お名前（フルネーム）<span class="sub">漢字・ひらがなどちらでもOK</span></label>
+      <input type="text" id="name" placeholder="例：山田 太郎">
+    </div>
+    <div class="form-group">
+      <label>母方の旧姓（おばあちゃん側）<span class="sub">わからなければ空欄でOK</span></label>
+      <input type="text" id="mother-name" placeholder="例：田中、佐藤、渡辺...">
+    </div>
+    <div class="form-group">
+      <label>父方の旧姓（おじいちゃん側）<span class="sub">わからなければ空欄でOK</span></label>
+      <input type="text" id="father-name" placeholder="例：鈴木、高橋、伊藤...">
+    </div>
+    <div class="form-group">
+      <label>生まれ年（だいたいでOK）</label>
+      <div class="select-wrap">
+        <select id="birth-year">
+          <option value="">選んでください</option>
+          <option>2010年代</option><option>2000年代</option><option>1990年代</option>
+          <option>1980年代</option><option>1970年代</option><option>1960年代</option>
+          <option>1950年代以前</option>
+        </select>
+      </div>
+    </div>
+    <div class="nav-btns">
+      <button class="btn-next" onclick="goStep(2)">次へ → 先祖の職業</button>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="form-section" id="step2">
+    <div class="form-section-title">🏮 先祖の職業（3代前くらいまで）</div>
+    <div class="form-section-desc">祖父母・曾祖父母が何をしていたか、ざっくり教えてください。「よくわからない」でも大丈夫。先祖の職業はあなたの血に刻まれています。</div>
+    <div class="ancestor-row">
+      <div class="ancestor-item">
+        <div class="ancestor-label">👴 父方の祖父（おじいちゃん）</div>
+        <input type="text" id="anc1" placeholder="例：農家、大工、商人、漁師...">
+      </div>
+      <div class="ancestor-item">
+        <div class="ancestor-label">👵 父方の祖母（おばあちゃん）</div>
+        <input type="text" id="anc2" placeholder="例：農家、縫い物、旅館...">
+      </div>
+      <div class="ancestor-item">
+        <div class="ancestor-label">👴 母方の祖父（おじいちゃん）</div>
+        <input type="text" id="anc3" placeholder="例：職人、会社員、公務員...">
+      </div>
+      <div class="ancestor-item">
+        <div class="ancestor-label">👵 母方の祖母（おばあちゃん）</div>
+        <input type="text" id="anc4" placeholder="例：農家、呉服屋、先生...">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>3代前（曽祖父母など）でわかることがあれば<span class="sub">ざっくりでOK</span></label>
+      <textarea id="anc5" placeholder="例：代々農家だった、武士の家系だった、商人の家系だった、海に関わる仕事だった など"></textarea>
+    </div>
+    <div class="nav-btns">
+      <button class="btn-back" onclick="goStep(1)">← 戻る</button>
+      <button class="btn-next" onclick="goStep(3)">次へ → 性格・好み</button>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="form-section" id="step3">
+    <div class="form-section-title">🌀 あなたの性格・得意なこと</div>
+    <div class="form-section-desc">直感で選んでください。複数選んでもOKです。</div>
+    <div class="personality-grid" id="personality-grid">
+      <div class="personality-card" onclick="togglePersonality(this)" data-val="作る・育てる">
+        <div class="personality-emoji">🌱</div>
+        <div class="personality-name">作る・育てる</div>
+        <div class="personality-desc">ものを作ること、育てることが好き。結果が形に残ることに喜びを感じる。</div>
+      </div>
+      <div class="personality-card" onclick="togglePersonality(this)" data-val="伝える・教える">
+        <div class="personality-emoji">🗣</div>
+        <div class="personality-name">伝える・教える</div>
+        <div class="personality-desc">人に話すこと、教えること、つなぐことが得意。コミュニケーションが好き。</div>
+      </div>
+      <div class="personality-card" onclick="togglePersonality(this)" data-val="じっくり・丁寧">
+        <div class="personality-emoji">🔍</div>
+        <div class="personality-name">じっくり・丁寧</div>
+        <div class="personality-desc">一つのことをじっくりやりたい。細かい作業が得意。完成度を求める。</div>
+      </div>
+      <div class="personality-card" onclick="togglePersonality(this)" data-val="動く・体を使う">
+        <div class="personality-emoji">💪</div>
+        <div class="personality-name">動く・体を使う</div>
+        <div class="personality-desc">じっとしていられない。体を動かすことが好き。外で働きたい。</div>
+      </div>
+      <div class="personality-card" onclick="togglePersonality(this)" data-val="考える・調べる">
+        <div class="personality-emoji">📚</div>
+        <div class="personality-name">考える・調べる</div>
+        <div class="personality-desc">頭で考えること、調べること、分析することが好き。知的好奇心が強い。</div>
+      </div>
+      <div class="personality-card" onclick="togglePersonality(this)" data-val="守る・つなぐ">
+        <div class="personality-emoji">🛡</div>
+        <div class="personality-name">守る・つなぐ</div>
+        <div class="personality-desc">大切なものを守りたい。伝統や文化を残すことに価値を感じる。</div>
+      </div>
+    </div>
+    <div class="form-group" style="margin-top:1.5rem;">
+      <label>好きな場所・空間<span class="sub">直感で選んでください</span></label>
+      <div class="select-wrap">
+        <select id="place-pref">
+          <option value="">選んでください</option>
+          <option>山・森・田んぼ（自然の中）</option>
+          <option>海・川・湖（水辺）</option>
+          <option>工房・アトリエ（室内の手仕事）</option>
+          <option>畑・農地（開けた土地）</option>
+          <option>町・市場（人が集まる場所）</option>
+          <option>静かな場所（一人で集中）</option>
+        </select>
+      </div>
+    </div>
+    <div class="nav-btns">
+      <button class="btn-back" onclick="goStep(2)">← 戻る</button>
+      <button class="btn-next" onclick="goStep(4)">次へ → 自然との関係</button>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="form-section" id="step4">
+    <div class="form-section-title">🌿 自然・季節との関係</div>
+    <div class="form-section-desc">五行説（木・火・土・金・水）で、あなたの根本的な性質を見ます。直感で選んでください。</div>
+    <div class="nature-grid">
+      <div class="nature-card" data-go="木" onclick="selectNature(this)">
+        <div class="nature-emoji">🌳</div>
+        <div class="nature-name" style="color:var(--ki)">木</div>
+        <div class="nature-desc">成長・春・東<br>やさしく伸びる</div>
+      </div>
+      <div class="nature-card" data-go="火" onclick="selectNature(this)">
+        <div class="nature-emoji">🔥</div>
+        <div class="nature-name" style="color:var(--hi)">火</div>
+        <div class="nature-desc">情熱・夏・南<br>明るく燃える</div>
+      </div>
+      <div class="nature-card" data-go="土" onclick="selectNature(this)">
+        <div class="nature-emoji">🌍</div>
+        <div class="nature-name" style="color:var(--tsuchi)">土</div>
+        <div class="nature-desc">安定・中央<br>どっしりと支える</div>
+      </div>
+      <div class="nature-card" data-go="金" onclick="selectNature(this)">
+        <div class="nature-emoji">⚡</div>
+        <div class="nature-name" style="color:var(--kin)">金</div>
+        <div class="nature-desc">決断・秋・西<br>鋭く完成させる</div>
+      </div>
+      <div class="nature-card" data-go="水" onclick="selectNature(this)">
+        <div class="nature-emoji">💧</div>
+        <div class="nature-name" style="color:var(--mizu)">水</div>
+        <div class="nature-desc">柔軟・冬・北<br>静かに深まる</div>
+      </div>
+    </div>
+    <div class="form-group" style="margin-top:1.5rem;">
+      <label>今の自分に近い状態は？</label>
+      <div class="select-wrap">
+        <select id="current-state">
+          <option value="">選んでください</option>
+          <option>何か新しいことを始めたい（陽・動）</option>
+          <option>今は静かにじっくりやりたい（陰・静）</option>
+          <option>居場所が欲しい・ゆっくりしたい（陰・安）</option>
+          <option>誰かの役に立ちたい（陽・貢献）</option>
+          <option>自分を変えたい・脱出したい（陽・変革）</option>
+        </select>
+      </div>
+    </div>
+    <div class="nav-btns">
+      <button class="btn-back" onclick="goStep(3)">← 戻る</button>
+      <button class="btn-next" onclick="generate()">🔮 診断する</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- RESULT -->
+<div class="result-wrap" id="result-wrap">
+</div>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loading">
+  <div class="loading-moon">🌕</div>
+  <div class="loading-text">
+    先祖の記憶をよみがえらせています<br>
+    <span class="loading-dots"></span>
+  </div>
+</div>
+
+<script>
+let selectedPersonality = [];
+let selectedNature = null;
+let currentStep = 1;
+
+function goStep(n) {
+  document.getElementById('step' + currentStep).classList.remove('active');
+  const sc = document.getElementById('sc' + currentStep);
+  sc.classList.remove('active');
+  sc.classList.add('done');
+  sc.textContent = '✓';
+  if (currentStep < n && currentStep <= 3) {
+    document.getElementById('sl' + currentStep).classList.add('done');
+  }
+  currentStep = n;
+  document.getElementById('step' + n).classList.add('active');
+  document.getElementById('sc' + n).classList.add('active');
+  document.getElementById('sc' + n).classList.remove('done');
+  document.getElementById('sc' + n).textContent = n;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function togglePersonality(el) {
+  el.classList.toggle('selected');
+  const val = el.dataset.val;
+  if (el.classList.contains('selected')) {
+    selectedPersonality.push(val);
+  } else {
+    selectedPersonality = selectedPersonality.filter(v => v !== val);
+  }
+}
+
+function selectNature(el) {
+  document.querySelectorAll('.nature-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedNature = el.dataset.go;
+}
+
+async function generate() {
+  const name = document.getElementById('name').value || 'あなた';
+  const motherName = document.getElementById('mother-name').value;
+  const fatherName = document.getElementById('father-name').value;
+  const birthYear = document.getElementById('birth-year').value;
+  const anc = [
+    document.getElementById('anc1').value,
+    document.getElementById('anc2').value,
+    document.getElementById('anc3').value,
+    document.getElementById('anc4').value,
+    document.getElementById('anc5').value,
+  ].filter(Boolean).join('、');
+  const personality = selectedPersonality.join('、') || '特になし';
+  const place = document.getElementById('place-pref').value;
+  const nature = selectedNature || '土';
+  const state = document.getElementById('current-state').value;
+
+  document.getElementById('form-wrap').style.display = 'none';
+  document.getElementById('loading').classList.add('show');
+
+  const prompt = `あなたは日本古来の占術と民俗学に精通した専門家です。以下の情報から、その人の適性を診断してください。
+
+【診断対象】
+- 名前: ${name}
+- 母方の旧姓: ${motherName || '不明'}
+- 父方の旧姓: ${fatherName || '不明'}
+- 生まれ年代: ${birthYear || '不明'}
+- 先祖の職業（3代前まで）: ${anc || '不明'}
+- 性格・得意なこと: ${personality}
+- 好きな場所: ${place || '不明'}
+- 五行属性（本人の選択）: ${nature}
+- 現在の状態: ${state || '不明'}
+
+以下のJSON形式で回答してください。JSONのみ出力し、説明文は不要です：
+{
+  "縄文弥生": {
+    "タイプ": "縄文型" または "弥生型" または "縄文弥生混合型",
+    "emoji": "絵文字1つ",
+    "説明": "2〜3文で特徴を説明",
+    "キーワード": ["言葉1","言葉2","言葉3"]
+  },
+  "五行": {
+    "属性": "木か火か土か金か水",
+    "emoji": "絵文字1つ",
+    "説明": "2〜3文で特徴と仕事への影響を説明",
+    "キーワード": ["言葉1","言葉2","言葉3"]
+  },
+  "干支陰陽": {
+    "十二支": "子丑寅卯辰巳午未申酉戌亥のどれか（生まれ年から推定）",
+    "陰陽": "陽" または "陰",
+    "emoji": "絵文字1つ",
+    "説明": "2〜3文で特徴を説明",
+    "キーワード": ["言葉1","言葉2","言葉3"]
+  },
+  "先祖の血": {
+    "タイプ": "先祖の職業からの血筋タイプ名（例：土の民、海の民、火の職人など）",
+    "emoji": "絵文字1つ",
+    "説明": "先祖の職業がどのようにこの人の才能に影響しているか2〜3文で",
+    "キーワード": ["言葉1","言葉2","言葉3"]
+  },
+  "総合タイプ": {
+    "名前": "このひとの本質的なタイプ名（例：大地を耕す民、火を継ぐ職人、水辺の守り人 など、詩的に）",
+    "emoji": "絵文字1つ",
+    "説明": "この人の全体的な特質を詩的に2〜3文で"
+  },
+  "向いている仕事": [
+    {"仕事名": "農業（米・野菜）", "emoji": "🌾", "理由": "1文で理由"},
+    {"仕事名": "仕事名2", "emoji": "絵文字", "理由": "1文で理由"},
+    {"仕事名": "仕事名3", "emoji": "絵文字", "理由": "1文で理由"},
+    {"仕事名": "仕事名4", "emoji": "絵文字", "理由": "1文で理由"}
+  ],
+  "先祖からのメッセージ": "先祖の視点から、この人へのメッセージを詩的に2〜3文で（温かく励ます内容）"
+}`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await res.json();
+    let text = data.content[0].text.trim();
+    text = text.replace(/```json|```/g, '').trim();
+    const result = JSON.parse(text);
+    showResult(name, result);
+  } catch(e) {
+    console.error(e);
+    showFallbackResult(name, nature, personality, anc);
+  }
+
+  document.getElementById('loading').classList.remove('show');
+}
+
+function showResult(name, r) {
+  const attrCards = [
+    { label:'縄文・弥生診断', color:'#5C7A52', bg:'#EAF4E8', d: r['縄文弥生'] },
+    { label:'五行属性', color:'#C8952A', bg:'#FFF4DD', d: r['五行'] },
+    { label:'干支・陰陽', color:'#3A7A9A', bg:'#E4EEF8', d: r['干支陰陽'] },
+    { label:'先祖の血筋', color:'#9B6B47', bg:'#FAF0DC', d: r['先祖の血'] },
+  ].map(a => `
+    <div class="attr-card">
+      <div class="attr-card-header">
+        <span class="attr-badge" style="background:${a.bg};color:${a.color};">${a.label}</span>
+        <span class="attr-emoji">${a.d.emoji}</span>
+      </div>
+      <div class="attr-title">${a.d.タイプ || a.d.属性 || a.d.十二支 + '・' + a.d.陰陽 || a.d.タイプ}</div>
+      <div class="attr-desc" style="margin-top:0.5rem;">${a.d.説明}</div>
+      <div style="margin-top:0.75rem;">${(a.d.キーワード||[]).map(k=>`<span class="attr-keyword">${k}</span>`).join('')}</div>
+    </div>
+  `).join('');
+
+  const jobs = (r['向いている仕事']||[]).map((j,i) => `
+    <div class="job-item">
+      <span class="job-rank">${['一位','二位','三位','四位'][i]||''}</span>
+      <span class="job-emoji">${j.emoji}</span>
+      <div>
+        <div class="job-name">${j.仕事名}</div>
+        <div class="job-reason">${j.理由}</div>
+      </div>
+    </div>
+  `).join('');
+
+  const t = r['総合タイプ'];
+  document.getElementById('result-wrap').innerHTML = `
+    <div class="result-hero">
+      <div class="result-name">「${name}」さんの診断結果</div>
+      <div class="result-type-emoji">${t.emoji}</div>
+      <div class="result-type-name">${t.名前}</div>
+      <div class="result-type-sub">${t.説明}</div>
+    </div>
+
+    <div class="attr-grid">${attrCards}</div>
+
+    <div class="jobs-card">
+      <div class="jobs-title">🌾 向いている仕事・環境</div>
+      <div class="job-items">${jobs}</div>
+    </div>
+
+    <div class="ancestor-msg">
+      <div class="ancestor-msg-title">🏮 先祖からのメッセージ</div>
+      <p>「${r['先祖からのメッセージ']}」</p>
+    </div>
+
+    <div class="result-cta">
+      <button class="btn-match" onclick="window.location.href='tsugite-main.html#list'">
+        🌾 診断に合う農家・職人を見つける →
+      </button>
+      <button class="btn-retry" onclick="location.reload()">もう一度診断する</button>
+    </div>
+  `;
+  document.getElementById('result-wrap').classList.add('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showFallbackResult(name, nature, personality, anc) {
+  const typeMap = {
+    '木': {name:'森を育てる人', emoji:'🌳', desc:'じっくりと成長させる力を持ち、自然とともに生きる才能があります。'},
+    '火': {name:'火を継ぐ職人', emoji:'🔥', desc:'情熱と技術で何かを生み出す力があります。'},
+    '土': {name:'大地を守る民', emoji:'🌍', desc:'安定と継続の力。農業や伝統を守る仕事に向いています。'},
+    '金': {name:'鋭き技の担い手', emoji:'⚡', desc:'精密な技術と完成へのこだわりがあります。'},
+    '水': {name:'流れを読む知者', emoji:'💧', desc:'柔軟性と深い観察力で多くの仕事に適応できます。'},
+  };
+  const t = typeMap[nature] || typeMap['土'];
+  document.getElementById('result-wrap').innerHTML = `
+    <div class="result-hero">
+      <div class="result-name">「${name}」さんの診断結果</div>
+      <div class="result-type-emoji">${t.emoji}</div>
+      <div class="result-type-name">${t.name}</div>
+      <div class="result-type-sub">${t.desc}</div>
+    </div>
+    <div class="ancestor-msg">
+      <div class="ancestor-msg-title">🏮 先祖からのメッセージ</div>
+      <p>「あなたの中には、先祖たちが積み重ねてきた知恵と力が宿っています。焦らず、まず一歩踏み出してみてください。」</p>
+    </div>
+    <div class="result-cta">
+      <button class="btn-match" onclick="window.location.href='tsugite-main.html#list'">🌾 農家・職人を見つける →</button>
+      <button class="btn-retry" onclick="location.reload()">もう一度診断する</button>
+    </div>
+  `;
+  document.getElementById('result-wrap').classList.add('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>

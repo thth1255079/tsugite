@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>つぎて — X投稿自動生成</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --soil: #2C1810;
+    --clay: #8B5E3C;
+    --straw: #D4A853;
+    --cream: #F5F0E8;
+    --moss: #4A5E3A;
+    --sky: #7BA7BC;
+    --white: #FDFCF9;
+    --text: #1A1208;
+    --muted: #7A6955;
+    --x-bg: #000;
+    --x-border: #2F3336;
+    --x-text: #E7E9EA;
+    --x-muted: #71767B;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: #0F0F0F;
+    color: #E0E0E0;
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--soil);
+    padding: 0 2rem;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(212,168,83,0.2);
+  }
+
+  .logo {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.2rem;
+    color: var(--straw);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .logo-badge {
+    background: #1D9BF0;
+    color: white;
+    font-size: 0.65rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  .header-sub {
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  /* LAYOUT */
+  .layout {
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    gap: 0;
+    min-height: calc(100vh - 56px);
+  }
+
+  /* LEFT PANEL */
+  .left-panel {
+    background: #1A1A1A;
+    border-right: 1px solid #2A2A2A;
+    padding: 1.5rem;
+    overflow-y: auto;
+  }
+
+  .panel-title {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    color: var(--straw);
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .panel-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #2A2A2A;
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  label {
+    display: block;
+    font-size: 0.78rem;
+    color: #AAA;
+    margin-bottom: 0.35rem;
+    font-weight: 500;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    background: #252525;
+    border: 1px solid #333;
+    color: #E0E0E0;
+    padding: 0.6rem 0.8rem;
+    border-radius: 6px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.85rem;
+    transition: border-color 0.2s;
+    appearance: none;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--straw);
+    background: #2A2A2A;
+  }
+
+  textarea { resize: vertical; min-height: 80px; }
+
+  .select-wrap { position: relative; }
+  .select-wrap::after {
+    content: '▾';
+    position: absolute;
+    right: 0.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+    pointer-events: none;
+  }
+
+  .tone-btns {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .tone-btn {
+    border: 1px solid #333;
+    background: #252525;
+    color: #AAA;
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    font-family: 'Noto Sans JP', sans-serif;
+    transition: all 0.15s;
+  }
+
+  .tone-btn.active {
+    border-color: var(--straw);
+    background: rgba(212,168,83,0.12);
+    color: var(--straw);
+  }
+
+  .divider {
+    height: 1px;
+    background: #2A2A2A;
+    margin: 1.25rem 0;
+  }
+
+  .btn-generate {
+    width: 100%;
+    background: linear-gradient(135deg, var(--clay), var(--soil));
+    color: var(--straw);
+    border: none;
+    padding: 0.85rem;
+    border-radius: 8px;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-generate:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(139,94,60,0.4);
+  }
+
+  .btn-generate:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .btn-generate .loading-dots {
+    display: none;
+  }
+
+  .btn-generate.loading .btn-text { display: none; }
+  .btn-generate.loading .loading-dots { display: inline; }
+
+  /* RIGHT PANEL */
+  .right-panel {
+    background: #0F0F0F;
+    padding: 1.5rem 2rem;
+    overflow-y: auto;
+  }
+
+  .posts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    max-width: 900px;
+  }
+
+  /* X TWEET CARD */
+  .tweet-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .tweet-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: #666;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .tweet-label-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .tweet-card {
+    background: var(--x-bg);
+    border: 1px solid var(--x-border);
+    border-radius: 16px;
+    padding: 1.25rem;
+    font-family: -apple-system, 'Noto Sans JP', sans-serif;
+    position: relative;
+  }
+
+  .tweet-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .tweet-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  .tweet-account {
+    flex: 1;
+  }
+
+  .tweet-name {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--x-text);
+  }
+
+  .tweet-handle {
+    font-size: 0.78rem;
+    color: var(--x-muted);
+  }
+
+  .tweet-x-icon {
+    color: var(--x-text);
+    font-size: 1.1rem;
+  }
+
+  .tweet-body {
+    font-size: 0.92rem;
+    color: var(--x-text);
+    line-height: 1.65;
+    min-height: 80px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .tweet-body.placeholder {
+    color: #444;
+    font-style: italic;
+    font-size: 0.85rem;
+  }
+
+  .tweet-img-placeholder {
+    margin-top: 0.75rem;
+    height: 140px;
+    background: #1A1A1A;
+    border-radius: 12px;
+    border: 1px solid #2F3336;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #444;
+    font-size: 0.8rem;
+    display: none;
+  }
+
+  .tweet-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.85rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--x-border);
+  }
+
+  .tweet-actions {
+    display: flex;
+    gap: 1.2rem;
+  }
+
+  .tweet-action {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: var(--x-muted);
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+
+  .tweet-action:hover { color: #1D9BF0; }
+
+  .tweet-char-count {
+    font-size: 0.72rem;
+    color: var(--x-muted);
+  }
+
+  .tweet-char-count.over { color: #F4212E; }
+
+  /* ACTION BUTTONS */
+  .tweet-action-bar {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .btn-copy {
+    flex: 1;
+    background: #1A1A1A;
+    border: 1px solid #333;
+    color: #AAA;
+    padding: 0.5rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    font-family: 'Noto Sans JP', sans-serif;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+  }
+
+  .btn-copy:hover {
+    border-color: #1D9BF0;
+    color: #1D9BF0;
+  }
+
+  .btn-copy.copied {
+    border-color: #00BA7C;
+    color: #00BA7C;
+  }
+
+  .btn-post {
+    flex: 1;
+    background: #1D9BF0;
+    border: none;
+    color: white;
+    padding: 0.5rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 700;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+  }
+
+  .btn-post:hover { background: #1A8CD8; }
+
+  /* SCHEDULE */
+  .schedule-bar {
+    background: #1A1A1A;
+    border: 1px solid #2A2A2A;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1.5rem;
+    max-width: 900px;
+  }
+
+  .schedule-title {
+    font-size: 0.75rem;
+    color: var(--straw);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+  }
+
+  .schedule-slots {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .slot {
+    background: #252525;
+    border: 1px solid #333;
+    color: #AAA;
+    padding: 0.35rem 0.8rem;
+    border-radius: 5px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .slot.selected {
+    border-color: var(--straw);
+    color: var(--straw);
+    background: rgba(212,168,83,0.08);
+  }
+
+  .btn-schedule {
+    margin-top: 0.75rem;
+    background: var(--moss);
+    border: none;
+    color: white;
+    padding: 0.6rem 1.5rem;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 500;
+    transition: all 0.15s;
+    opacity: 0.5;
+  }
+
+  .btn-schedule.ready {
+    opacity: 1;
+  }
+
+  .btn-schedule.ready:hover { background: #3d4f30; }
+
+  /* LOADING SPINNER */
+  .spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(212,168,83,0.3);
+    border-top-color: var(--straw);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* GENERATING OVERLAY */
+  .generating-overlay {
+    display: none;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.7);
+    border-radius: 16px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.5rem;
+    color: var(--straw);
+    font-size: 0.85rem;
+  }
+
+  .generating-overlay.show { display: flex; }
+
+  /* EMPTY STATE */
+  .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #444;
+  }
+
+  .empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+  .empty-text { font-size: 0.9rem; line-height: 1.8; }
+
+  /* HISTORY */
+  .history-section {
+    margin-top: 2rem;
+    max-width: 900px;
+  }
+
+  .history-title {
+    font-size: 0.72rem;
+    color: #555;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .history-item {
+    background: #1A1A1A;
+    border: 1px solid #222;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: #777;
+  }
+
+  .history-item-text {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 1rem;
+    color: #999;
+  }
+
+  .history-time { color: #555; font-size: 0.72rem; }
+
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .posts-grid { grid-template-columns: 1fr; }
+    .left-panel { border-right: none; border-bottom: 1px solid #2A2A2A; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    つぎて
+    <span class="logo-badge">X AUTO</span>
+    <span style="font-family:'Noto Sans JP',sans-serif;font-size:0.78rem;color:#666;font-weight:300;">営業支援ツール</span>
+  </div>
+  <div class="header-sub">AI が投稿文を自動生成 → X へ配信</div>
+</header>
+
+<div class="layout">
+
+  <!-- LEFT: INPUT FORM -->
+  <div class="left-panel">
+
+    <div class="panel-title">掲載情報を入力</div>
+
+    <div class="form-group">
+      <label>業種</label>
+      <div class="select-wrap">
+        <select id="type">
+          <option value="農業（米・野菜）">🌾 農業（米・野菜）</option>
+          <option value="農業（果樹）">🍊 農業（果樹）</option>
+          <option value="農業（畜産・養鶏）">🐔 農業（畜産・養鶏）</option>
+          <option value="漁業">🐟 漁業</option>
+          <option value="伝統工芸">🏺 伝統工芸</option>
+          <option value="製造業・工場">🔧 製造業・工場</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>都道府県・地域</label>
+      <input type="text" id="location" placeholder="例：北海道 富良野市" value="北海道 富良野市">
+    </div>
+
+    <div class="form-group">
+      <label>経営者・職人の年齢・属性</label>
+      <input type="text" id="owner" placeholder="例：70代農家・3代目" value="70代農家・3代目">
+    </div>
+
+    <div class="form-group">
+      <label>仕事の概要・こだわり</label>
+      <textarea id="description" rows="3" placeholder="例：60年続く小麦農家。大雪山の麓で育てる春よ恋が自慢。">60年続く小麦農家。大雪山の麓で育てる春よ恋が自慢。子どもたちに土に触れる機会を作りたい。</textarea>
+    </div>
+
+    <div class="form-group">
+      <label>受け入れスタイル</label>
+      <div class="select-wrap">
+        <select id="style">
+          <option value="見学・体験（1日〜）">見学・体験（1日〜）</option>
+          <option value="週1回からのお手伝い">週1回からのお手伝い</option>
+          <option value="短期〜長期スタッフ">短期〜長期スタッフ</option>
+          <option value="後継者・事業承継">後継者・事業承継</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>特徴・アピールポイント</label>
+      <input type="text" id="appeal" placeholder="例：宿泊可・移住支援あり・子ども歓迎" value="宿泊可・移住支援あり・子ども歓迎">
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="panel-title">投稿トーン</div>
+
+    <div class="form-group">
+      <div class="tone-btns" id="tone-btns">
+        <button class="tone-btn active" onclick="setTone('温かく親しみやすい', this)">温かい</button>
+        <button class="tone-btn" onclick="setTone('情熱的・熱い', this)">熱い</button>
+        <button class="tone-btn" onclick="setTone('静かで詩的な', this)">詩的</button>
+        <button class="tone-btn" onclick="setTone('カジュアルでフレンドリーな', this)">カジュアル</button>
+        <button class="tone-btn" onclick="setTone('真剣・真摯な', this)">真剣</button>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <button class="btn-generate" id="gen-btn" onclick="generatePosts()">
+      <span class="btn-text">✨ AI で投稿文を生成する</span>
+      <span class="loading-dots"><span class="spinner"></span> 生成中...</span>
+    </button>
+
+    <div style="margin-top:0.75rem;font-size:0.72rem;color:#555;text-align:center;line-height:1.6;">
+      農家・職人向けと、不登校・学生向けの<br>2パターンを同時に生成します
+    </div>
+
+  </div>
+
+  <!-- RIGHT: PREVIEW -->
+  <div class="right-panel">
+
+    <div class="posts-grid" id="posts-grid">
+
+      <!-- EMPTY STATE -->
+      <div class="empty-state" id="empty-state">
+        <div class="empty-icon">🌾</div>
+        <div class="empty-text">
+          左のフォームに情報を入力して<br>「AI で投稿文を生成する」を押してください。<br><br>
+          <span style="color:#333;font-size:0.78rem;">農家・職人向け と 不登校・学生向け の<br>2パターンを自動で作ります。</span>
+        </div>
+      </div>
+
+      <!-- TWEET A: 農家・職人向け -->
+      <div class="tweet-wrapper" id="tweet-a-wrapper" style="display:none;">
+        <div class="tweet-label">
+          <span class="tweet-label-dot" style="background:#D4A853;"></span>
+          農家・職人・工場 フォロワー向け
+        </div>
+        <div class="tweet-card">
+          <div class="generating-overlay" id="overlay-a">
+            <div class="spinner"></div>
+            <span>生成中...</span>
+          </div>
+          <div class="tweet-header">
+            <div class="tweet-avatar" style="background:#2C1810;">🌾</div>
+            <div class="tweet-account">
+              <div class="tweet-name">つぎて</div>
+              <div class="tweet-handle">@tsugite_jp</div>
+            </div>
+            <div class="tweet-x-icon">𝕏</div>
+          </div>
+          <div class="tweet-body" id="tweet-a-body" style="color:#444;font-style:italic;font-size:0.85rem;">生成後にここに表示されます</div>
+          <div class="tweet-footer">
+            <div class="tweet-actions">
+              <div class="tweet-action">💬 <span>0</span></div>
+              <div class="tweet-action">🔁 <span>0</span></div>
+              <div class="tweet-action">❤️ <span>0</span></div>
+            </div>
+            <div class="tweet-char-count" id="char-a">0 / 280</div>
+          </div>
+        </div>
+        <div class="tweet-action-bar">
+          <button class="btn-copy" id="copy-a" onclick="copyTweet('a')">📋 コピー</button>
+          <button class="btn-post" onclick="openX('a')">𝕏 Xで投稿</button>
+        </div>
+      </div>
+
+      <!-- TWEET B: 不登校・学生向け -->
+      <div class="tweet-wrapper" id="tweet-b-wrapper" style="display:none;">
+        <div class="tweet-label">
+          <span class="tweet-label-dot" style="background:#7BA7BC;"></span>
+          不登校の親・学生・若者 フォロワー向け
+        </div>
+        <div class="tweet-card">
+          <div class="generating-overlay" id="overlay-b">
+            <div class="spinner"></div>
+            <span>生成中...</span>
+          </div>
+          <div class="tweet-header">
+            <div class="tweet-avatar" style="background:#1A3A4A;">🌱</div>
+            <div class="tweet-account">
+              <div class="tweet-name">つぎて</div>
+              <div class="tweet-handle">@tsugite_jp</div>
+            </div>
+            <div class="tweet-x-icon">𝕏</div>
+          </div>
+          <div class="tweet-body" id="tweet-b-body" style="color:#444;font-style:italic;font-size:0.85rem;">生成後にここに表示されます</div>
+          <div class="tweet-footer">
+            <div class="tweet-actions">
+              <div class="tweet-action">💬 <span>0</span></div>
+              <div class="tweet-action">🔁 <span>0</span></div>
+              <div class="tweet-action">❤️ <span>0</span></div>
+            </div>
+            <div class="tweet-char-count" id="char-b">0 / 280</div>
+          </div>
+        </div>
+        <div class="tweet-action-bar">
+          <button class="btn-copy" id="copy-b" onclick="copyTweet('b')">📋 コピー</button>
+          <button class="btn-post" onclick="openX('b')">𝕏 Xで投稿</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SCHEDULE BAR -->
+    <div class="schedule-bar" id="schedule-bar" style="display:none;">
+      <div class="schedule-title">⏰ 自動投稿スケジュール（デモ）</div>
+      <div class="schedule-slots" id="slots">
+        <div class="slot" onclick="toggleSlot(this)">🌅 07:00</div>
+        <div class="slot" onclick="toggleSlot(this)">☀️ 12:00</div>
+        <div class="slot" onclick="toggleSlot(this)">🌆 18:00</div>
+        <div class="slot" onclick="toggleSlot(this)">🌙 21:00</div>
+      </div>
+      <button class="btn-schedule" id="btn-schedule" onclick="confirmSchedule()">
+        選択した時間に自動投稿をセット
+      </button>
+      <div id="schedule-result" style="font-size:0.75rem;color:#00BA7C;margin-top:0.5rem;display:none;"></div>
+    </div>
+
+    <!-- HISTORY -->
+    <div class="history-section" id="history-section" style="display:none;">
+      <div class="history-title">生成履歴</div>
+      <div id="history-list"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let currentTone = '温かく親しみやすい';
+let tweetAText = '';
+let tweetBText = '';
+let history = [];
+
+function setTone(tone, btn) {
+  currentTone = tone;
+  document.querySelectorAll('.tone-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function toggleSlot(el) {
+  el.classList.toggle('selected');
+  const selected = document.querySelectorAll('.slot.selected').length;
+  const btn = document.getElementById('btn-schedule');
+  if (selected > 0) btn.classList.add('ready');
+  else btn.classList.remove('ready');
+}
+
+function updateCharCount(id, text) {
+  const el = document.getElementById('char-' + id);
+  const len = text.length;
+  el.textContent = len + ' / 280';
+  el.classList.toggle('over', len > 280);
+}
+
+async function generatePosts() {
+  const type = document.getElementById('type').value;
+  const location = document.getElementById('location').value;
+  const owner = document.getElementById('owner').value;
+  const description = document.getElementById('description').value;
+  const style = document.getElementById('style').value;
+  const appeal = document.getElementById('appeal').value;
+
+  if (!description.trim()) {
+    alert('仕事の概要を入力してください');
+    return;
+  }
+
+  const btn = document.getElementById('gen-btn');
+  btn.disabled = true;
+  btn.classList.add('loading');
+
+  document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('tweet-a-wrapper').style.display = 'flex';
+  document.getElementById('tweet-b-wrapper').style.display = 'flex';
+  document.getElementById('overlay-a').classList.add('show');
+  document.getElementById('overlay-b').classList.add('show');
+  document.getElementById('tweet-a-body').style.cssText = '';
+  document.getElementById('tweet-b-body').style.cssText = '';
+  document.getElementById('tweet-a-body').textContent = '';
+  document.getElementById('tweet-b-body').textContent = '';
+
+  const info = `業種：${type}、地域：${location}、経営者：${owner}、概要：${description}、受け入れ：${style}、特徴：${appeal}`;
+
+  try {
+    // Generate Tweet A (農家・職人向け)
+    const resA = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: `あなたは「つぎて」という後継者マッチングサービスの営業担当です。
+以下の農家・職人・工場の情報をもとに、X（Twitter）の投稿文を1つ作成してください。
+
+【対象読者】農業・工芸・ものづくりに関心がある人、移住を考えている人、副業・転職を考えている人
+【トーン】${currentTone}トーン
+【情報】${info}
+
+【ルール】
+- 日本語で書く
+- 文字数は200〜260文字（絵文字含む）
+- ハッシュタグを3〜4個つける（例：#後継者募集 #移住 #農業）
+- 「つぎてで掲載中」か「つぎて.jp で詳細」などURLへの誘導を自然に入れる
+- 農家・職人の人柄や思いが伝わるようにする
+- 投稿文だけを出力する（説明不要）`
+        }]
+      })
+    });
+
+    const dataA = await resA.json();
+    tweetAText = dataA.content[0].text.trim();
+    document.getElementById('overlay-a').classList.remove('show');
+    document.getElementById('tweet-a-body').textContent = tweetAText;
+    updateCharCount('a', tweetAText);
+
+    // Generate Tweet B (不登校・学生向け)
+    const resB = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: `あなたは「つぎて」という後継者マッチングサービスの営業担当です。
+以下の農家・職人・工場の情報をもとに、X（Twitter）の投稿文を1つ作成してください。
+
+【対象読者】不登校の子どもの親、学校に行きにくい10〜20代、新しい生き方を探している若者、田舎暮らしに興味がある人
+【トーン】${currentTone}トーン
+【情報】${info}
+
+【ルール】
+- 日本語で書く
+- 文字数は200〜260文字（絵文字含む）
+- 「学校じゃない場所」「居場所」「体験」などのキーワードを自然に使う
+- ハッシュタグを3〜4個つける（例：#不登校 #居場所 #体験学習）
+- 「まずは見学だけでもOK」など低いハードルを強調する
+- 「つぎてで掲載中」か「つぎて.jp で詳細」などURLへの誘導を自然に入れる
+- 投稿文だけを出力する（説明不要）`
+        }]
+      })
+    });
+
+    const dataB = await resB.json();
+    tweetBText = dataB.content[0].text.trim();
+    document.getElementById('overlay-b').classList.remove('show');
+    document.getElementById('tweet-b-body').textContent = tweetBText;
+    updateCharCount('b', tweetBText);
+
+    // Show schedule and history
+    document.getElementById('schedule-bar').style.display = 'block';
+    document.getElementById('history-section').style.display = 'block';
+
+    // Add to history
+    const now = new Date();
+    const timeStr = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
+    addHistory(type + ' / ' + location, timeStr);
+
+  } catch (err) {
+    document.getElementById('overlay-a').classList.remove('show');
+    document.getElementById('overlay-b').classList.remove('show');
+    document.getElementById('tweet-a-body').textContent = 'エラーが発生しました。もう一度お試しください。';
+    document.getElementById('tweet-b-body').textContent = 'エラーが発生しました。もう一度お試しください。';
+    console.error(err);
+  }
+
+  btn.disabled = false;
+  btn.classList.remove('loading');
+}
+
+function copyTweet(id) {
+  const text = id === 'a' ? tweetAText : tweetBText;
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy-' + id);
+    btn.textContent = '✅ コピーしました';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = '📋 コピー';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+
+function openX(id) {
+  const text = id === 'a' ? tweetAText : tweetBText;
+  if (!text) return;
+  const url = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text);
+  window.open(url, '_blank');
+}
+
+function confirmSchedule() {
+  const slots = [...document.querySelectorAll('.slot.selected')].map(s => s.textContent.trim());
+  if (slots.length === 0) return;
+  const result = document.getElementById('schedule-result');
+  result.textContent = `✅ ${slots.join('、')} に自動投稿をセットしました（※デモ）`;
+  result.style.display = 'block';
+}
+
+function addHistory(label, time) {
+  history.unshift({ label, time });
+  if (history.length > 5) history.pop();
+  const list = document.getElementById('history-list');
+  list.innerHTML = history.map(h => `
+    <div class="history-item">
+      <span class="history-item-text">🌾 ${h.label} — 2パターン生成済み</span>
+      <span class="history-time">${h.time}</span>
+    </div>
+  `).join('');
+}
+</script>
+
+</body>
+</html>

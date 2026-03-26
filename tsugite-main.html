@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>つぎて — 後継者マッチング</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600;700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1A1208;
+  --soil: #3D2B1F;
+  --clay: #9B6B47;
+  --straw: #C8952A;
+  --gold: #E8B84B;
+  --cream: #FAF6EF;
+  --sage: #5C7A52;
+  --sky: #4A8FA8;
+  --stone: #8A8078;
+  --white: #FFFFFF;
+  --border: #E5DDD4;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: var(--white);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* ======= HEADER ======= */
+header {
+  position: sticky; top:0; z-index:200;
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 2px solid var(--straw);
+  padding: 0 3rem;
+  height: 72px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.logo-wrap { display:flex; align-items:baseline; gap:0.75rem; }
+.logo {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 2rem; font-weight: 700;
+  color: var(--soil);
+  letter-spacing: 0.05em;
+}
+.logo-en {
+  font-size: 0.75rem; color: var(--stone);
+  letter-spacing: 0.15em; font-weight: 300;
+}
+nav { display:flex; align-items:center; gap:2rem; }
+nav a {
+  font-size: 1rem; color: var(--soil); text-decoration: none;
+  font-weight: 500; letter-spacing: 0.03em;
+  transition: color 0.2s;
+}
+nav a:hover { color: var(--straw); }
+.btn-shindan {
+  background: var(--straw);
+  color: white; border: none;
+  padding: 0.6rem 1.5rem;
+  font-size: 0.95rem; font-weight: 700;
+  border-radius: 4px; cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  letter-spacing: 0.05em;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(200,149,42,0.3);
+}
+.btn-shindan:hover {
+  background: var(--soil);
+  box-shadow: 0 4px 16px rgba(61,43,31,0.3);
+  transform: translateY(-1px);
+}
+
+/* ======= HERO ======= */
+.hero {
+  background: var(--cream);
+  padding: 5rem 3rem 4rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  min-height: 560px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; top:0; right:0;
+  width: 50%; height: 100%;
+  background: linear-gradient(135deg, var(--cream) 0%, #EDE5D8 100%);
+}
+.hero-text { position: relative; z-index:1; }
+.hero-eyebrow {
+  font-size: 0.85rem; letter-spacing: 0.2em;
+  color: var(--straw); font-weight: 700;
+  text-transform: uppercase; margin-bottom: 1.25rem;
+}
+.hero h1 {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  font-weight: 700; line-height: 1.35;
+  color: var(--soil); margin-bottom: 1.5rem;
+  letter-spacing: 0.02em;
+}
+.hero h1 em {
+  font-style: normal; color: var(--straw);
+  border-bottom: 3px solid var(--gold);
+}
+.hero-lead {
+  font-size: 1.1rem; color: var(--stone);
+  line-height: 1.9; margin-bottom: 2rem;
+  font-weight: 300;
+}
+.hero-btns { display:flex; gap:1rem; flex-wrap:wrap; }
+.btn-primary {
+  background: var(--soil); color: var(--gold);
+  border: none; padding: 1rem 2.5rem;
+  font-size: 1.05rem; font-weight: 700;
+  border-radius: 4px; cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  letter-spacing: 0.08em;
+  transition: all 0.2s;
+}
+.btn-primary:hover { background: var(--clay); transform: translateY(-2px); }
+.btn-secondary {
+  background: white; color: var(--soil);
+  border: 2px solid var(--soil);
+  padding: 1rem 2.5rem;
+  font-size: 1.05rem; font-weight: 700;
+  border-radius: 4px; cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  letter-spacing: 0.08em;
+  transition: all 0.2s;
+}
+.btn-secondary:hover { background: var(--cream); transform: translateY(-2px); }
+
+.hero-photos {
+  position: relative; z-index:1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 200px 200px;
+  gap: 0.75rem;
+}
+.hero-photo {
+  border-radius: 8px; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 3.5rem;
+  background: white;
+  box-shadow: 0 4px 20px rgba(61,43,31,0.1);
+  transition: transform 0.3s;
+}
+.hero-photo:hover { transform: scale(1.02); }
+.hero-photo:first-child { grid-column: 1/3; height:220px; }
+.photo-label {
+  position: absolute; bottom:0.5rem; left:0.75rem;
+  background: rgba(0,0,0,0.55); color:white;
+  font-size: 0.72rem; padding: 0.2rem 0.5rem; border-radius: 3px;
+}
+.hero-photo { position: relative; }
+
+/* ======= STATS ======= */
+.stats-bar {
+  background: var(--soil);
+  padding: 2rem 3rem;
+  display: flex; justify-content: center;
+  gap: 5rem;
+}
+.stat { text-align: center; }
+.stat-num {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 2.4rem; font-weight: 700;
+  color: var(--gold); display: block;
+}
+.stat-label {
+  font-size: 0.85rem; color: rgba(255,255,255,0.6);
+  margin-top: 0.2rem;
+}
+
+/* ======= SHINDAN BANNER ======= */
+.shindan-banner {
+  background: linear-gradient(135deg, #2A1F4A 0%, #1A3A4A 50%, #2A3A1A 100%);
+  padding: 3rem;
+  display: flex; align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  position: relative; overflow: hidden;
+}
+.shindan-banner::before {
+  content: '⛩🌕🌾';
+  position: absolute; right: 2rem; top: 50%;
+  transform: translateY(-50%);
+  font-size: 4rem; opacity: 0.08;
+  letter-spacing: 1rem;
+}
+.shindan-text h2 {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 1.7rem; font-weight: 700;
+  color: #F0D080; margin-bottom: 0.5rem;
+}
+.shindan-text p {
+  font-size: 1rem; color: rgba(255,255,255,0.7);
+  line-height: 1.7;
+}
+.shindan-tags {
+  display: flex; gap: 0.5rem; flex-wrap:wrap;
+  margin-top: 0.75rem;
+}
+.shindan-tag {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.8);
+  font-size: 0.8rem; padding: 0.25rem 0.7rem;
+  border-radius: 20px;
+}
+.btn-shindan-big {
+  background: linear-gradient(135deg, #C8952A, #E8B84B);
+  color: var(--soil); border: none;
+  padding: 1.2rem 3rem;
+  font-size: 1.1rem; font-weight: 900;
+  border-radius: 6px; cursor: pointer;
+  font-family: 'Noto Serif JP', sans-serif;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  transition: all 0.2s;
+  box-shadow: 0 4px 20px rgba(200,149,42,0.4);
+}
+.btn-shindan-big:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(200,149,42,0.5);
+}
+
+/* ======= SECTION ======= */
+.section {
+  padding: 5rem 3rem;
+  max-width: 1280px; margin: 0 auto;
+}
+.section-head {
+  display: flex; align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 2.5rem;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 1rem;
+}
+.section-title {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 1.9rem; font-weight: 700;
+  color: var(--soil);
+}
+.section-title span {
+  font-size: 1rem; color: var(--straw);
+  margin-left: 0.75rem; font-weight: 400;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+.section-link {
+  font-size: 0.95rem; color: var(--straw);
+  text-decoration: none; font-weight: 500;
+  display: flex; align-items: center; gap: 0.3rem;
+}
+
+/* FILTER */
+.filters {
+  display: flex; gap: 0.6rem;
+  flex-wrap: wrap; margin-bottom: 2.5rem;
+}
+.filter-btn {
+  border: 2px solid var(--border);
+  background: white; color: var(--stone);
+  padding: 0.55rem 1.2rem;
+  border-radius: 30px;
+  font-size: 0.95rem; font-weight: 500;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.15s;
+}
+.filter-btn.active, .filter-btn:hover {
+  background: var(--soil);
+  border-color: var(--soil);
+  color: white;
+}
+
+/* ======= CARDS ======= */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 2rem;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 12px rgba(61,43,31,0.06);
+  transition: all 0.25s;
+  cursor: pointer;
+}
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(61,43,31,0.14);
+  border-color: var(--clay);
+}
+
+/* PHOTO AREA */
+.card-photos {
+  position: relative;
+  height: 220px;
+  background: var(--cream);
+  overflow: hidden;
+}
+.card-main-photo {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 5rem;
+  background: linear-gradient(135deg, #F0EAE0 0%, #E5D8C8 100%);
+}
+.card-sub-photos {
+  position: absolute; bottom:0.75rem; right:0.75rem;
+  display: flex; gap: 0.4rem;
+}
+.card-sub-photo {
+  width: 52px; height: 52px;
+  background: white;
+  border-radius: 6px;
+  border: 2px solid white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.card-badge {
+  position: absolute; top:0.75rem; left:0.75rem;
+  background: var(--soil);
+  color: var(--gold); font-size: 0.78rem; font-weight: 700;
+  padding: 0.3rem 0.75rem; border-radius: 4px;
+  letter-spacing: 0.05em;
+}
+.card-welcome {
+  position: absolute; top:0.75rem; right:0.75rem;
+  background: var(--sage);
+  color: white; font-size: 0.75rem; font-weight: 700;
+  padding: 0.3rem 0.75rem; border-radius: 4px;
+}
+.card-photo-count {
+  position: absolute; bottom:0.75rem; left:0.75rem;
+  background: rgba(0,0,0,0.5); color:white;
+  font-size: 0.72rem; padding: 0.2rem 0.5rem; border-radius: 3px;
+}
+
+/* CARD BODY */
+.card-body { padding: 1.5rem; }
+.card-meta {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem; color: var(--stone);
+}
+.card-location { display:flex; align-items:center; gap:0.2rem; }
+.card-title {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 1.15rem; font-weight: 700;
+  line-height: 1.5; margin-bottom: 0.75rem;
+  color: var(--soil);
+}
+.card-desc {
+  font-size: 0.92rem; color: var(--stone);
+  line-height: 1.75;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+.card-tags {
+  display: flex; gap: 0.4rem; flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+.tag {
+  background: var(--cream); color: var(--clay);
+  font-size: 0.8rem; font-weight: 500;
+  padding: 0.25rem 0.7rem;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+.card-footer {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+.card-step {
+  font-size: 0.82rem; color: var(--sky);
+  font-weight: 500;
+}
+.btn-kiinaru {
+  background: var(--straw); color: white;
+  border: none; padding: 0.6rem 1.3rem;
+  font-size: 0.9rem; font-weight: 700;
+  border-radius: 5px; cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.15s;
+}
+.btn-kiinaru:hover { background: var(--soil); }
+
+/* ======= PHOTO GALLERY MODAL ======= */
+.modal-overlay {
+  display: none; position: fixed;
+  top:0; left:0; right:0; bottom:0;
+  background: rgba(0,0,0,0.85);
+  z-index: 500;
+  align-items: center; justify-content: center;
+  padding: 2rem;
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: white; border-radius: 16px;
+  max-width: 680px; width: 100%;
+  max-height: 90vh; overflow-y: auto;
+  position: relative;
+}
+.modal-close {
+  position: sticky; top:0;
+  background: white; border: none;
+  width: 100%; padding: 1rem 1.5rem;
+  text-align: right; cursor: pointer;
+  font-size: 1.3rem; color: var(--stone);
+  border-bottom: 1px solid var(--border);
+  z-index: 10;
+}
+.modal-photos {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0.75rem; padding: 1.5rem;
+}
+.modal-photo-main {
+  grid-column: 1/3;
+  height: 260px; background: var(--cream);
+  border-radius: 8px;
+  display: flex; align-items:center; justify-content:center;
+  font-size: 7rem;
+}
+.modal-photo-sub {
+  height: 140px; background: var(--cream);
+  border-radius: 8px;
+  display: flex; align-items:center; justify-content:center;
+  font-size: 4rem;
+}
+.modal-content { padding: 0 1.5rem 1.5rem; }
+.modal-title {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 1.4rem; font-weight: 700;
+  color: var(--soil); margin-bottom: 0.5rem;
+}
+.modal-meta { font-size:0.85rem; color:var(--stone); margin-bottom:1rem; }
+.modal-desc { font-size:0.95rem; line-height:1.85; color:var(--ink); margin-bottom:1.5rem; }
+.modal-details {
+  background: var(--cream); border-radius: 8px;
+  padding: 1.25rem; margin-bottom: 1.5rem;
+}
+.modal-detail-row {
+  display: flex; gap: 1rem; font-size:0.88rem;
+  margin-bottom: 0.5rem;
+}
+.modal-detail-label { font-weight:700; min-width:90px; color:var(--soil); }
+.modal-btns { display:flex; gap:0.75rem; }
+.btn-modal-main {
+  flex:1; background:var(--straw); color:white;
+  border:none; padding:0.9rem;
+  font-size:1rem; font-weight:700; border-radius:6px;
+  cursor:pointer; font-family:'Noto Sans JP',sans-serif;
+  transition: all 0.15s;
+}
+.btn-modal-main:hover { background:var(--soil); }
+.btn-modal-sub {
+  flex:1; background:white; color:var(--soil);
+  border:2px solid var(--soil);
+  padding:0.9rem; font-size:1rem; font-weight:700;
+  border-radius:6px; cursor:pointer;
+  font-family:'Noto Sans JP',sans-serif;
+  transition: all 0.15s;
+}
+.btn-modal-sub:hover { background:var(--cream); }
+
+/* ======= HOW ======= */
+.how-section {
+  background: var(--cream);
+  padding: 5rem 3rem;
+}
+.how-inner { max-width: 1000px; margin:0 auto; }
+.how-steps {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 2rem; margin-top: 2.5rem;
+  position: relative;
+}
+.how-steps::before {
+  content:'';
+  position:absolute; top:3rem; left:16.6%; right:16.6%;
+  height:2px; background: var(--border);
+}
+.how-step { text-align:center; position:relative; }
+.how-num {
+  width: 60px; height:60px;
+  border-radius: 50%;
+  background: var(--soil);
+  color: var(--gold);
+  font-family: 'Noto Serif JP', serif;
+  font-size: 1.5rem; font-weight:700;
+  display:flex; align-items:center; justify-content:center;
+  margin: 0 auto 1.25rem;
+  position: relative; z-index:1;
+}
+.how-step h3 {
+  font-size:1.1rem; font-weight:700;
+  color:var(--soil); margin-bottom:0.5rem;
+}
+.how-step p { font-size:0.9rem; color:var(--stone); line-height:1.7; }
+
+/* ======= FOOTER ======= */
+footer {
+  background: var(--soil);
+  color: rgba(255,255,255,0.7);
+  padding: 3rem;
+  text-align: center;
+}
+footer .footer-logo {
+  font-family:'Noto Serif JP',serif;
+  font-size:1.8rem; color:var(--gold);
+  margin-bottom:0.75rem;
+}
+footer p { font-size:0.85rem; line-height:1.8; }
+
+/* ANIMATION */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(20px); }
+  to { opacity:1; transform:translateY(0); }
+}
+.card { animation: fadeUp 0.5s ease both; }
+.card:nth-child(1){animation-delay:0.05s}
+.card:nth-child(2){animation-delay:0.1s}
+.card:nth-child(3){animation-delay:0.15s}
+.card:nth-child(4){animation-delay:0.2s}
+.card:nth-child(5){animation-delay:0.25s}
+.card:nth-child(6){animation-delay:0.3s}
+
+@media(max-width:900px){
+  header { padding:0 1.5rem; }
+  .hero { grid-template-columns:1fr; padding:3rem 1.5rem; }
+  .hero::before { display:none; }
+  .hero-photos { display:none; }
+  .stats-bar { gap:2rem; flex-wrap:wrap; padding:1.5rem; }
+  .section { padding:3rem 1.5rem; }
+  .how-steps { grid-template-columns:1fr; }
+  .how-steps::before { display:none; }
+  nav { display:none; }
+  .shindan-banner { flex-direction:column; }
+  .cards { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo-wrap">
+    <div class="logo">つぎて</div>
+    <div class="logo-en">TSUGITE — SUCCESSOR MATCHING</div>
+  </div>
+  <nav>
+    <a href="#list">募集一覧</a>
+    <a href="#how">使い方</a>
+    <a href="#" onclick="openShindan()">適性診断</a>
+  </nav>
+  <button class="btn-shindan" onclick="openShindan()">🔮 適性診断を受ける</button>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-text">
+    <div class="hero-eyebrow">SUCCESSOR MATCHING PLATFORM</div>
+    <h1>あなたの<em>先祖の血</em>が、<br>次の仕事を教えてくれる。</h1>
+    <p class="hero-lead">
+      後継者を探す農家・職人・工場と、<br>
+      居場所を探す不登校の親子・若者をつなぐ。<br>
+      まずは「見学するだけ」でいい。
+    </p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="document.getElementById('list').scrollIntoView({behavior:'smooth'})">募集一覧を見る</button>
+      <button class="btn-secondary" onclick="openShindan()">🔮 適性診断を受ける</button>
+    </div>
+  </div>
+  <div class="hero-photos">
+    <div class="hero-photo" style="background:linear-gradient(135deg,#E8F0D8,#D8E8C8);">
+      🌾
+      <span class="photo-label">北海道 小麦農家</span>
+    </div>
+    <div class="hero-photo" style="background:linear-gradient(135deg,#F0EAD8,#E8DEC8);">
+      🏺
+      <span class="photo-label">岐阜 和紙職人</span>
+    </div>
+    <div class="hero-photo" style="background:linear-gradient(135deg,#E8F4F0,#D8EDE8);">
+      🍊
+      <span class="photo-label">愛媛 みかん農家</span>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat">
+    <span class="stat-num">127万人</span>
+    <span class="stat-label">後継者未定の経営者</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num">34万人</span>
+    <span class="stat-label">不登校の小中学生</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num">無料</span>
+    <span class="stat-label">掲載・登録費用</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num">全国</span>
+    <span class="stat-label">対応エリア</span>
+  </div>
+</div>
+
+<!-- SHINDAN BANNER -->
+<div class="shindan-banner">
+  <div class="shindan-text">
+    <h2>🔮 あなたに向いている仕事、先祖が知っている</h2>
+    <p>氏名・先祖の職業・性格から、縄文/弥生の素質・五行属性・干支を診断。<br>あなたが輝ける場所を、古代の知恵でひも解きます。</p>
+    <div class="shindan-tags">
+      <span class="shindan-tag">🌿 縄文・弥生診断</span>
+      <span class="shindan-tag">☯ 五行属性（木火土金水）</span>
+      <span class="shindan-tag">🐉 十二支・干支</span>
+      <span class="shindan-tag">🌕 陰陽・方位</span>
+    </div>
+  </div>
+  <button class="btn-shindan-big" onclick="openShindan()">無料で診断する →</button>
+</div>
+
+<!-- LIST SECTION -->
+<div id="list" class="section">
+  <div class="section-head">
+    <div class="section-title">後継者・体験者 募集中<span id="count-label">全6件</span></div>
+    <a href="#" class="section-link">すべて見る →</a>
+  </div>
+
+  <div class="filters">
+    <button class="filter-btn active" onclick="filterCards('all',this)">すべて</button>
+    <button class="filter-btn" onclick="filterCards('farm',this)">🌾 農業</button>
+    <button class="filter-btn" onclick="filterCards('craft',this)">🏺 伝統工芸</button>
+    <button class="filter-btn" onclick="filterCards('factory',this)">🔧 製造業</button>
+    <button class="filter-btn" onclick="filterCards('kids',this)">👶 子ども・不登校歓迎</button>
+    <button class="filter-btn" onclick="filterCards('stay',this)">🏠 宿泊あり</button>
+  </div>
+
+  <div class="cards" id="cards">
+
+    <!-- CARD 1 -->
+    <div class="card" data-type="farm kids stay" onclick="openModal(0)">
+      <div class="card-photos">
+        <div class="card-main-photo">🌾</div>
+        <div class="card-sub-photos">
+          <div class="card-sub-photo">🏡</div>
+          <div class="card-sub-photo">🌄</div>
+          <div class="card-sub-photo">👨‍🌾</div>
+        </div>
+        <span class="card-badge">農業</span>
+        <span class="card-welcome">👶 子ども歓迎</span>
+        <span class="card-photo-count">📷 写真 12枚</span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-location">📍 北海道 富良野市</span>
+          <span>｜</span><span>農家 70代・3代目</span>
+        </div>
+        <div class="card-title">60年続く小麦農家。大雪山の麓で、一緒に畑を耕してくれる人を探しています</div>
+        <div class="card-desc">祖父の代から続く春よ恋の農家です。広大な北海道の大地で、種をまき、育て、収穫する。土に触れる喜びを子どもたちにも伝えたい。後継ぎでなくてもまず来てみてください。</div>
+        <div class="card-tags">
+          <span class="tag">体験1日〜OK</span>
+          <span class="tag">宿泊無料</span>
+          <span class="tag">移住支援あり</span>
+          <span class="tag">不登校歓迎</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-step">🌱 まずは見学・体験から</span>
+          <button class="btn-kiinaru" onclick="event.stopPropagation();alert('「気になる」を送りました！（デモ）')">気になる！</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 2 -->
+    <div class="card" data-type="craft kids" onclick="openModal(1)">
+      <div class="card-photos">
+        <div class="card-main-photo" style="font-size:4.5rem;">🏺</div>
+        <div class="card-sub-photos">
+          <div class="card-sub-photo">🌿</div>
+          <div class="card-sub-photo">💧</div>
+        </div>
+        <span class="card-badge">伝統工芸</span>
+        <span class="card-welcome">👶 不登校歓迎</span>
+        <span class="card-photo-count">📷 写真 8枚</span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-location">📍 岐阜県 美濃市</span>
+          <span>｜</span><span>和紙職人 65歳</span>
+        </div>
+        <div class="card-title">1300年の歴史・美濃和紙。ユネスコ無形文化遺産の技を次の世代へ</div>
+        <div class="card-desc">水に漉く、乾かす、仕上げる。繰り返す工程の中に、静かな達成感があります。学校が苦手な子でも、手を動かすのが好きな子なら大歓迎。週1回から来られます。</div>
+        <div class="card-tags">
+          <span class="tag">週1回〜OK</span>
+          <span class="tag">体験無料</span>
+          <span class="tag">不登校歓迎</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-step">🌱 週1回の体験から</span>
+          <button class="btn-kiinaru" onclick="event.stopPropagation();alert('「気になる」を送りました！（デモ）')">気になる！</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 3 -->
+    <div class="card" data-type="farm stay" onclick="openModal(2)">
+      <div class="card-photos">
+        <div class="card-main-photo">🍊</div>
+        <div class="card-sub-photos">
+          <div class="card-sub-photo">⛰</div>
+          <div class="card-sub-photo">🌊</div>
+          <div class="card-sub-photo">🏡</div>
+        </div>
+        <span class="card-badge">農業</span>
+        <span class="card-photo-count">📷 写真 15枚</span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-location">📍 愛媛県 西予市</span>
+          <span>｜</span><span>農家 68歳</span>
+        </div>
+        <div class="card-title">段々畑のみかん農家。技術も土地も、丸ごと引き継いでくれる人へ</div>
+        <div class="card-desc">南向きの急斜面に広がる段々畑。機械が入れないぶん手間がかかりますが、だからこそおいしいみかんができます。農業未経験でも丁寧に教えます。</div>
+        <div class="card-tags">
+          <span class="tag">農地引継あり</span>
+          <span class="tag">研修制度あり</span>
+          <span class="tag">移住支援</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-step">🤝 短期お手伝いから</span>
+          <button class="btn-kiinaru" onclick="event.stopPropagation();alert('「気になる」を送りました！（デモ）')">気になる！</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 4 -->
+    <div class="card" data-type="craft kids" onclick="openModal(3)">
+      <div class="card-photos">
+        <div class="card-main-photo">🪆</div>
+        <div class="card-sub-photos">
+          <div class="card-sub-photo">🌸</div>
+          <div class="card-sub-photo">♨️</div>
+        </div>
+        <span class="card-badge">伝統工芸</span>
+        <span class="card-welcome">👶 親子歓迎</span>
+        <span class="card-photo-count">📷 写真 9枚</span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-location">📍 宮城県 鳴子温泉</span>
+          <span>｜</span><span>こけし職人 72歳</span>
+        </div>
+        <div class="card-title">鳴子こけし250年の伝統。見ているだけでも来てください</div>
+        <div class="card-desc">木を削り、絵付けをする。シンプルだけど奥深い仕事です。見ているだけでも来てください。いつか覚えたいと思ったときに、また来てくれればいい。</div>
+        <div class="card-tags">
+          <span class="tag">見学だけでもOK</span>
+          <span class="tag">親子歓迎</span>
+          <span class="tag">温泉地</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-step">🌱 見学から始めよう</span>
+          <button class="btn-kiinaru" onclick="event.stopPropagation();alert('「気になる」を送りました！（デモ）')">気になる！</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 5 -->
+    <div class="card" data-type="factory" onclick="openModal(4)">
+      <div class="card-photos">
+        <div class="card-main-photo">🔪</div>
+        <div class="card-sub-photos">
+          <div class="card-sub-photo">⚙️</div>
+          <div class="card-sub-photo">🔧</div>
+          <div class="card-sub-photo">✨</div>
+        </div>
+        <span class="card-badge">製造業</span>
+        <span class="card-photo-count">📷 写真 11枚</span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-location">📍 新潟県 三条市</span>
+          <span>｜</span><span>刃物製造 2代目 64歳</span>
+        </div>
+        <div class="card-title">職人が作る包丁工場。技術も設備も、まるごと引き継いでほしい</div>
+        <div class="card-desc">三条の刃物は全国トップクラスのブランド。職人3名在籍、製造技術はしっかり引き継げます。経営に興味がある方を歓迎します。</div>
+        <div class="card-tags">
+          <span class="tag">職人在籍</span>
+          <span class="tag">設備引継</span>
+          <span class="tag">経営サポート</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-step">🤝 後継者・経営者候補</span>
+          <button class="btn-kiinaru" onclick="event.stopPropagation();alert('「気になる」を送りました！（デモ）')">気になる！</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 6 -->
+    <div class="card" data-type="farm kids stay" onclick="openModal(5)">
+      <div class="card-photos">
+        <div class="card-main-photo">🐔</div>
+        <div class="card-sub-photos">
+          <div class="card-sub-photo">🥚</div>
+          <div class="card-sub-photo">🌿</div>
+          <div class="card-sub-photo">🏔</div>
+        </div>
+        <span class="card-badge">農業</span>
+        <span class="card-welcome">👶 不登校歓迎</span>
+        <span class="card-photo-count">📷 写真 7枚</span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-location">📍 長野県 安曇野市</span>
+          <span>｜</span><span>養鶏農家 66歳</span>
+        </div>
+        <div class="card-title">平飼い養鶏。朝の卵集めから、一緒にやりませんか</div>
+        <div class="card-desc">150羽の鶏を平飼いで育てています。学校に行っていなくても、ここでは鶏が友達です。朝の小さなルーティンが、生きることに直結しています。</div>
+        <div class="card-tags">
+          <span class="tag">週末体験あり</span>
+          <span class="tag">不登校歓迎</span>
+          <span class="tag">動物OK</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-step">🌱 1日体験から</span>
+          <button class="btn-kiinaru" onclick="event.stopPropagation();alert('「気になる」を送りました！（デモ）')">気になる！</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- HOW -->
+<div class="how-section" id="how">
+  <div class="how-inner">
+    <div style="text-align:center;margin-bottom:0.5rem;font-size:0.85rem;letter-spacing:0.15em;color:var(--straw);font-weight:700;">HOW IT WORKS</div>
+    <h2 style="font-family:'Noto Serif JP',serif;font-size:2rem;font-weight:700;color:var(--soil);text-align:center;margin-bottom:0.5rem;">３ステップで始められる</h2>
+    <p style="text-align:center;color:var(--stone);font-size:1rem;margin-bottom:2rem;">いきなり「後継者になって」は重すぎる。まず出会うところから。</p>
+    <div class="how-steps">
+      <div class="how-step">
+        <div class="how-num">1</div>
+        <h3>🔮 適性診断を受ける</h3>
+        <p>氏名・先祖の職業・性格から、あなたの古代属性と向いている仕事を診断。自分でも気づいていない才能が見つかるかも。</p>
+      </div>
+      <div class="how-step">
+        <div class="how-num">2</div>
+        <h3>🌾 気になる農家・職人を見つける</h3>
+        <p>診断結果に合った農家・職人が表示されます。写真を見て、「気になる！」を押すだけ。まず見学・体験からでOK。</p>
+      </div>
+      <div class="how-step">
+        <div class="how-num">3</div>
+        <h3>🤝 ゆっくりと関係を育てる</h3>
+        <p>週1回から、1日体験から。焦らなくていい。農家・職人さんと仲良くなってから、次のことを考えればいい。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">つぎて</div>
+  <p>後継者マッチングプラットフォーム<br>農家・職人・工場 × 不登校の親子・若者・やってみたい人</p>
+  <p style="margin-top:1rem;font-size:0.78rem;opacity:0.5;">© 2025 つぎて. All rights reserved.</p>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal" id="modal-box">
+    <button class="modal-close" onclick="closeModalDirect()">✕ 閉じる</button>
+    <div id="modal-inner"></div>
+  </div>
+</div>
+
+<script>
+const data = [
+  { emoji:'🌾', sub:['🏡','🌄','👨‍🌾','🌿','❄️','🚜'], type:'農業', loc:'北海道 富良野市', who:'農家 70代・3代目', title:'60年続く小麦農家。大雪山の麓で、一緒に畑を耕してくれる人を探しています', tags:['体験1日〜OK','宿泊無料','移住支援あり','不登校歓迎'], step:'🌱 まずは見学・体験から', desc:'祖父の代から60年続く春よ恋の農家です。大雪山の麓に広がる畑で、種をまき、育て、収穫する。\n\nその一連の流れを一緒に体験してほしいのです。子どもたちに土の感触、命の重さを伝えたいという思いがあります。学校に行けていなくても、ここでは毎日新しい発見があります。\n\n後継ぎを求めていますが、まずは来てみるだけで大丈夫。農繁期（5月〜10月）の短期お手伝いも大歓迎です。', details:[['受け入れ','見学・体験／短期／長期・後継者'],['頻度','農繁期〜通年、要相談'],['宿泊','可能（無料）'],['対象','誰でも歓迎、子ども・親子歓迎'],['移住支援','北海道移住支援制度あり']] },
+  { emoji:'🏺', sub:['🌿','💧','🕯','📜'], type:'伝統工芸', loc:'岐阜県 美濃市', who:'和紙職人 65歳', title:'1300年の歴史・美濃和紙。ユネスコ無形文化遺産の技を次の世代へ', tags:['週1回〜OK','体験無料','不登校歓迎'], step:'🌱 週1回の体験から', desc:'ユネスコ無形文化遺産にも登録された美濃和紙の工房を営んでいます。水に漉く、乾かす、仕上げる——繰り返す工程の中に、静かな達成感があります。\n\n学校が苦手な子でも、手を動かすのが好きな子なら大歓迎。「うまくやらなくていい、まず触ってみて」というスタンスで受け入れています。\n\n将来的に工房を継いでくれる人がいれば最高ですが、まずは出会いから。', details:[['受け入れ','体験／定期通い／後継者候補'],['頻度','週1回〜'],['宿泊','要相談'],['対象','不登校の子・親子 特に歓迎'],['体験料','無料']] },
+  { emoji:'🍊', sub:['⛰','🌊','🏡','🌸','☀️'], type:'農業', loc:'愛媛県 西予市', who:'農家 68歳', title:'段々畑のみかん農家。技術も土地も、丸ごと引き継いでくれる人へ', tags:['農地引継あり','研修制度あり','移住支援'], step:'🤝 短期お手伝いから', desc:'南向きの急斜面に広がる段々畑。機械が入れないぶん手間がかかりますが、だからこそおいしいみかんができます。\n\n農業未経験でも丁寧に教えます。まずは収穫期（11〜1月）に来てみてください。農地・機械も含めて引き継ぐ意欲のある方を探しています。\n\n愛媛県の移住支援制度も活用できます。', details:[['受け入れ','短期お手伝い→後継者候補'],['農地','段々畑 約2ha'],['宿泊','可能（有料）'],['収穫期','11〜1月'],['移住支援','愛媛県移住支援制度利用可']] },
+  { emoji:'🪆', sub:['🌸','♨️','🌲','🎨'], type:'伝統工芸', loc:'宮城県 鳴子温泉', who:'こけし職人 72歳', title:'鳴子こけし250年の伝統。見ているだけでも来てください', tags:['見学だけでもOK','親子歓迎','温泉地'], step:'🌱 見学から始めよう', desc:'木を削り、絵付けをする。シンプルだけど奥深い仕事です。250年続く鳴子こけしの技術を、次の誰かに伝えたいと思っています。\n\n見ているだけでも来てください。いつか覚えたいと思ったときに、また来てくれればいい。そういうゆっくりとした出会いを大切にしています。\n\n温泉地なので滞在も楽しめます。', details:[['受け入れ','見学／体験／修行・後継者'],['頻度','いつでも、要連絡'],['宿泊','温泉宿が近隣に多数'],['対象','親子歓迎、年齢不問'],['体験料','工芸体験500円〜']] },
+  { emoji:'🔪', sub:['⚙️','🔧','✨','🏭'], type:'製造業', loc:'新潟県 三条市', who:'刃物製造 2代目 64歳', title:'職人が作る包丁工場。技術も設備も、まるごと引き継いでほしい', tags:['職人在籍','設備引継','経営サポート'], step:'🤝 後継者・経営者候補', desc:'三条の刃物は全国でもトップクラスのブランド。当工場では職人3名が在籍しており、製造技術はしっかり引き継げます。\n\nOEM中心の安定した受注があります。経営に興味があり、ものづくりが好きな方を歓迎します。\n\n金融機関との事業承継サポートも活用できます。', details:[['受け入れ','後継者・経営者候補'],['規模','従業員4名、年商約8000万円'],['設備','鍛造・研磨・仕上げ 一式'],['対象','経営に興味がある方・異業種可'],['サポート','事業承継融資制度あり']] },
+  { emoji:'🐔', sub:['🥚','🌿','🏔','🌅','🐣'], type:'農業', loc:'長野県 安曇野市', who:'養鶏農家 66歳', title:'平飼い養鶏。朝の卵集めから、一緒にやりませんか', tags:['週末体験あり','不登校歓迎','動物OK'], step:'🌱 1日体験から', desc:'150羽の鶏を平飼いで育てています。鶏たちと毎朝顔を合わせる生活。\n\n学校に行っていなくても、ここでは鶏が友達です。朝の卵集め、餌やり、掃除。毎日の小さなルーティンが、ここでは生きることに直結しています。\n\n週末体験（1日〜）も随時受付中。長野・安曇野の自然の中で、ゆっくりしてください。', details:[['受け入れ','体験（1日〜）→長期'],['頻度','週末〜週1回'],['宿泊','要相談（近隣に民宿あり）'],['対象','不登校の子・親子 特に歓迎'],['動物','鶏150羽・犬1頭']] },
+];
+
+function filterCards(type, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  let count = 0;
+  document.querySelectorAll('.card').forEach(c => {
+    const show = type === 'all' || c.dataset.type.includes(type);
+    c.style.display = show ? '' : 'none';
+    if (show) count++;
+  });
+  document.getElementById('count-label').textContent = '全' + count + '件';
+}
+
+function openModal(i) {
+  const d = data[i];
+  const subPhotos = d.sub.map(e => `<div class="modal-photo-sub">${e}</div>`).join('');
+  const details = d.details.map(r => `<div class="modal-detail-row"><span class="modal-detail-label">${r[0]}</span><span>${r[1]}</span></div>`).join('');
+  const tags = d.tags.map(t => `<span class="tag">${t}</span>`).join('');
+  document.getElementById('modal-inner').innerHTML = `
+    <div class="modal-photos">
+      <div class="modal-photo-main">${d.emoji}</div>
+      ${subPhotos}
+    </div>
+    <div class="modal-content">
+      <div style="display:flex;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap;">
+        <span style="background:var(--soil);color:var(--gold);font-size:0.78rem;font-weight:700;padding:0.25rem 0.7rem;border-radius:4px;">${d.type}</span>
+        ${tags}
+      </div>
+      <div class="modal-title">${d.title}</div>
+      <div class="modal-meta">📍 ${d.loc} ｜ ${d.who}</div>
+      <div class="modal-desc">${d.desc.replace(/\n/g,'<br>')}</div>
+      <div class="modal-details">
+        <div style="font-size:0.82rem;font-weight:700;color:var(--soil);margin-bottom:0.75rem;">📋 受け入れ詳細</div>
+        ${details}
+      </div>
+      <div style="font-size:0.88rem;color:var(--sky);margin-bottom:1.25rem;font-weight:500;">${d.step}</div>
+      <div class="modal-btns">
+        <button class="btn-modal-main" onclick="alert('「気になる！」を送りました。農家・職人さんから連絡が届きます。（デモ）')">気になる！を伝える</button>
+        <button class="btn-modal-sub" onclick="openShindan()">🔮 先に適性診断する</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('modal').classList.add('show');
+}
+function closeModal(e){ if(e.target===document.getElementById('modal')) closeModalDirect(); }
+function closeModalDirect(){ document.getElementById('modal').classList.remove('show'); }
+function openShindan(){ window.open('tsugite-shindan.html','_blank'); }
+</script>
+</body>
+</html>
