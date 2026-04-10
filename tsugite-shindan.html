@@ -26,15 +26,18 @@
         h1 {
             font-size: 2.6rem;
             margin: 0 0 10px;
+            letter-spacing: 0.03em;
         }
         
         .subtitle {
             font-size: 1.25rem;
             opacity: 0.95;
+            max-width: 700px;
+            margin: 0 auto;
         }
         
         .container {
-            max-width: 800px;
+            max-width: 820px;
             margin: 40px auto;
             padding: 0 20px;
         }
@@ -49,23 +52,24 @@
         
         .question h3 {
             color: #4a6b4a;
-            margin-top: 0;
+            margin: 0 0 20px;
+            font-size: 1.25rem;
         }
         
         .options {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            margin-top: 20px;
+            gap: 14px;
         }
         
         .option {
-            padding: 16px 20px;
+            padding: 18px 22px;
             background: #f8f5f0;
             border-radius: 12px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
             border: 2px solid transparent;
+            font-size: 1.05rem;
         }
         
         .option:hover {
@@ -79,7 +83,7 @@
             font-weight: 500;
         }
         
-        button {
+        .btn {
             background: #8ab07d;
             color: white;
             border: none;
@@ -89,25 +93,32 @@
             cursor: pointer;
             display: block;
             margin: 40px auto 0;
+            transition: all 0.3s;
         }
         
-        button:hover {
+        .btn:hover {
             background: #6f8f63;
+            transform: scale(1.03);
         }
         
         .result {
             display: none;
             background: #fff;
-            border-radius: 16px;
-            padding: 40px;
-            margin-top: 50px;
+            border-radius: 20px;
+            padding: 45px 35px;
+            margin-top: 60px;
             text-align: center;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.07);
+        }
+        
+        .result h2 {
+            color: #4a6b4a;
+            margin-bottom: 20px;
         }
         
         footer {
             text-align: center;
-            padding: 40px 20px;
+            padding: 50px 20px 30px;
             color: #666;
             font-size: 0.95rem;
         }
@@ -117,40 +128,50 @@
 
     <header>
         <h1>つぎて 適性診断</h1>
-        <p class="subtitle">自分の心地よさや感覚をヒントに、<br>自然とつながる仕事を見つけてみましょう</p>
+        <p class="subtitle">自分の心地よさや、これまで感じてきたことをヒントに<br>自然とつながる仕事を見つけてみましょう</p>
     </header>
 
     <div class="container">
-        <!-- ここに質問を5〜6個程度入れています。必要に応じて調整してください -->
+
         <div class="question" id="q1">
-            <h3>1. あなたが一番落ち着く場所や時間は？</h3>
+            <h3>1. あなたが一番落ち着くのはどんな場所や時間？</h3>
             <div class="options">
-                <div class="option" data-value="nature">広い畑や森の中で、風を感じながら過ごす時間</div>
-                <div class="option" data-value="hand">手を使って何かを作っているとき</div>
-                <div class="option" data-value="quiet">静かな作業場で、集中して取り組むとき</div>
-                <div class="option" data-value="people">誰かと一緒に、のんびり話しながら作業するとき</div>
+                <div class="option" data-value="1">広い畑や森の中で、風や土の匂いを感じながら</div>
+                <div class="option" data-value="2">手を使って何かを作ったり、丁寧に作業しているとき</div>
+                <div class="option" data-value="3">静かな作業場で、一人集中して取り組むとき</div>
+                <div class="option" data-value="4">誰かと一緒に、のんびり話しながら作業するとき</div>
             </div>
         </div>
 
         <div class="question" id="q2">
-            <h3>2. 子ども時代に楽しかったことは？</h3>
+            <h3>2. 子どもの頃に特に楽しかった思い出は？</h3>
             <div class="options">
-                <div class="option" data-value="outdoor">外で土や植物に触れること</div>
-                <div class="option" data-value="craft">工作や道具をいじること</div>
-                <div class="option" data-value="helping">家族や地域の人を手伝うこと</div>
-                <div class="option" data-value="alone">一人でゆっくり何かを作ること</div>
+                <div class="option" data-value="1">外で土や植物に触れたり、自然の中で遊ぶこと</div>
+                <div class="option" data-value="2">工作や道具をいじったり、ものを作ること</div>
+                <div class="option" data-value="3">家族や近所の人を手伝うこと</div>
+                <div class="option" data-value="4">一人でゆっくり何かを作ったり、考えごとをすること</div>
             </div>
         </div>
 
-        <!-- 質問はもっと追加したい場合は教えてください。ここではサンプルとして2つだけ入れています。実際は5〜7個がおすすめ -->
+        <div class="question" id="q3">
+            <h3>3. 仕事で大切にしたい雰囲気は？</h3>
+            <div class="options">
+                <div class="option" data-value="1">自然の中で、体を動かしながらゆったり働く</div>
+                <div class="option" data-value="2">自分のペースで、丁寧に技術を磨いていく</div>
+                <div class="option" data-value="3">地域の人とつながりながら、温かい関係を築く</div>
+                <div class="option" data-value="4">新しいアイデアを少しずつ取り入れながら続ける</div>
+            </div>
+        </div>
 
-        <button onclick="showResult()">診断結果を見る</button>
+        <button class="btn" onclick="showResult()">診断結果を見る</button>
 
+        <!-- 結果表示エリア -->
         <div class="result" id="result">
             <h2>あなたのつぎてイメージ</h2>
-            <p id="result-text" style="font-size:1.2rem; line-height:1.8;"></p>
-            <button onclick="location.reload()">もう一度診断する</button>
+            <p id="result-text" style="font-size:1.18rem; line-height:1.85; color:#444;"></p>
+            <button class="btn" onclick="location.reload()" style="margin-top:30px;">もう一度診断する</button>
         </div>
+
     </div>
 
     <footer>
@@ -158,29 +179,20 @@
     </footer>
 
     <script>
-        // 簡単な選択機能（クリックで選択状態に）
+        // 選択機能
         document.querySelectorAll('.option').forEach(option => {
-            option.addEventListener('click', () => {
-                const parent = option.parentElement;
+            option.addEventListener('click', function() {
+                const parent = this.parentElement;
                 parent.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
-                option.classList.add('selected');
+                this.classList.add('selected');
             });
         });
 
         function showResult() {
             const resultDiv = document.getElementById('result');
             const resultText = document.getElementById('result-text');
-            
-            // 簡易的な結果例（実際はもっと詳細なロジックにできます）
+
             resultText.innerHTML = `
-                あなたは<strong>自然の中でゆったりと手を動かす</strong>のが心地よいタイプのようです。<br><br>
-                北海道の広々とした畑や、岐阜の工房のような場所で、<br>
-                自分の感覚を大切にしながら次の仕事をつないでいくイメージがぴったりです。<br><br>
-                🌾 ゆったり農家系 / 🪵 手仕事職人系 がおすすめ
-            `;
-            resultDiv.style.display = 'block';
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-        }
-    </script>
-</body>
-</html>
+                あなたは<strong>自然の中で自分の感覚を大切にしながら手を動かす</strong>のがとても合いそうです。<br><br>
+                広々とした畑でのんびり働くイメージ、または工房で丁寧にものづくりをするイメージがぴったり。<br><br>
+                🌱 ゆったり農家系　　🪵 手仕事職人系　　が特​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
