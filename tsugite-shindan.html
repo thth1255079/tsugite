@@ -2,4 +2,74 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>つぎて 適性診断</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+        body {font-family: 'Noto Sans JP', sans-serif; margin:0; padding:0; background:#f8f5f0; color:#333; line-height:1.7;}
+        header {background: linear-gradient(135deg, #a8c4a0, #d4c9b0); color:#fff; text-align:center; padding:70px 20px 50px;}
+        h1 {font-size:2.6rem; margin:0 0 10px;}
+        .subtitle {font-size:1.25rem; opacity:0.95;}
+        .container {max-width:820px; margin:40px auto; padding:0 20px;}
+        .question {background:#fff; border-radius:16px; padding:32px; margin-bottom:30px; box-shadow:0 6px 20px rgba(0,0,0,0.05);}
+        .question h3 {color:#4a6b4a; margin:0 0 20px; font-size:1.25rem;}
+        .options {display:flex; flex-direction:column; gap:14px;}
+        .option {padding:18px 22px; background:#f8f5f0; border-radius:12px; cursor:pointer; transition:all 0.3s; border:2px solid transparent;}
+        .option:hover {background:#e8f0e0; border-color:#8ab07d;}
+        .option.selected {background:#d4e4c8; border-color:#6f8f63; font-weight:500;}
+        .btn {background:#8ab07d; color:white; border:none; padding:16px 50px; font-size:1.15rem; border-radius:50px; cursor:pointer; display:block; margin:40px auto 0;}
+        .btn:hover {background:#6f8f63; transform:scale(1.03);}
+        footer {text-align:center; padding:50px 20px; color:#666; font-size:0.95rem;}
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>つぎて 適性診断</h1>
+        <p class="subtitle">自分の心地よさや、これまで感じてきたことをヒントに<br>自然とつながる仕事を見つけてみましょう</p>
+    </header>
+
+    <div class="container">
+
+        <div class="question">
+            <h3>1. あなたが一番落ち着くのはどんな場所や時間？</h3>
+            <div class="options">
+                <div class="option">広い畑や森の中で、風や土の匂いを感じながら</div>
+                <div class="option">手を使って何かを作ったり、丁寧に作業しているとき</div>
+                <div class="option">静かな作業場で、一人集中して取り組むとき</div>
+                <div class="option">誰かと一緒に、のんびり話しながら作業するとき</div>
+            </div>
+        </div>
+
+        <div class="question">
+            <h3>2. 子どもの頃に特に楽しかった思い出は？</h3>
+            <div class="options">
+                <div class="option">外で土や植物に触れたり、自然の中で遊ぶこと</div>
+                <div class="option">工作や道具をいじったり、ものを作ること</div>
+                <div class="option">家族や近所の人を手伝うこと</div>
+                <div class="option">一人でゆっくり何かを作ったり、考えごとをすること</div>
+            </div>
+        </div>
+
+        <div class="question">
+            <h3>3. 仕事で大切にしたい雰囲気は？</h3>
+            <div class="options">
+                <div class="option">自然の中で、体を動かしながらゆったり働く</div>
+                <div class="option">自分のペースで、丁寧に技術を磨いていく</div>
+                <div class="option">地域の人とつながりながら、温かい関係を築く</div>
+                <div class="option">新しいアイデアを少しずつ取り入れながら続ける</div>
+            </div>
+        </div>
+
+        <button class="btn" onclick="window.location.href='/tsugite/tsugite-result.html'">
+            診断結果を見る
+        </button>
+
+    </div>
+
+    <footer>
+        <p>つぎて — 自分のペースで、自然とつながる仕事マッチング</p>
+    </footer>
+
+</body>
+</html>
